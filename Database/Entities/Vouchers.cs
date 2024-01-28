@@ -7,18 +7,21 @@ using System.Threading.Tasks;
 
 namespace Database.Entities
 {
-    public partial class Color
+    public partial class Vouchers
     {
         public int Id { get; set; }
 
         [Required]
         [StringLength(64)]
-        public required string Name { get; set; }
+        public required string Code { get; set; }
 
-        [Required]
-        [StringLength(6)]
-        public required string Hex { get; set; }
+        public decimal Amount { get; set; }
 
-        public virtual ICollection<Product>? Products { get; set; }
+        public bool HasBeenUsed { get; set; } = false;
+
+        public DateTime CreatedAt { get; set; }
+
+        public DateTime ExpirationDate { get; set;}
+
     }
 }

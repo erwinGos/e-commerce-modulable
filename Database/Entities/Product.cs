@@ -6,9 +6,8 @@ namespace Database.Entities
     public partial class Product
     {
         public int Id { get; set; }
-
-        public int CategoryId { get; set; }
-
+        
+        [JsonIgnore]
         public int BrandId { get; set; }
 
         [Required]
@@ -20,6 +19,8 @@ namespace Database.Entities
 
         public decimal Price { get; set; } = 0;
 
+        public decimal PriceWithoutTax { get; set; } = 0;
+
         [StringLength(256)]
         public string Description { get; set; } = "";
 
@@ -27,14 +28,19 @@ namespace Database.Entities
 
         public decimal Weight { get; set; }
 
-        public Boolean IsDeactivated { get; set; }
+        public bool IsDeactivated { get; set; }
 
         public DateTime CreatedAt { get; set; }
 
         public DateTime LastUpdatedAt { get; set;}
 
+        public required virtual Brand Brand { get; set; }
+
         public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
 
         public virtual ICollection<Color> Colors { get; set; } = new List<Color>();
+
+        public virtual ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
+
     }
 }

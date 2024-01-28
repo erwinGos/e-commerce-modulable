@@ -11,23 +11,27 @@ namespace Database.Entities
     {
         public int Id { get; set; }
 
-        public required int User_Id { get; set; }
+        public required int UserId { get; set; }
 
         [StringLength(128)]
         public required string Name { get; set; }
 
+        [Required]
         [StringLength(128)]
         public required string Street { get; set; }
 
         [StringLength(64)]
         public required string PhoneNumber { get; set; }
 
+        [Required]
         [StringLength(128)]
         public required string City { get; set; }
 
+        [Required]
         [StringLength(64)]
         public required string PostalCode { get; set; }
 
+        [Required]
         [StringLength(128)]
         public required string Country { get; set; }
 

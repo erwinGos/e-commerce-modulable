@@ -1,0 +1,29 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Reflection.Metadata;
+using System.Text;
+using System.Threading.Tasks;
+
+namespace Database.Entities
+{
+    public partial class WebsiteSettings
+    {
+        [Required]
+        [StringLength(256)]
+        public required string WebsiteName { get; set; }
+
+        public required byte[] MainLogo { get; set; }
+
+        [StringLength(256)]
+        public string Address { get; set; } = "";
+
+        public decimal DefaultTax { get; set; }
+
+        [StringLength(256)]
+        public string StripeApi { get; set; } = "";
+
+        public DateTime LastUpdateAt { get; set; }
+    }
+}
