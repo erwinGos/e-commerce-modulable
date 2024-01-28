@@ -7,18 +7,16 @@ using System.Threading.Tasks;
 
 namespace Database.Entities
 {
-    public partial class Color
+    public partial class Brand
     {
         public int Id { get; set; }
 
         [Required]
-        [StringLength(64)]
+        [StringLength(256)]
         public required string Name { get; set; }
 
-        [Required]
-        [StringLength(6)]
-        public required string Hex { get; set; }
+        public byte[]? Logo { get; set; }
 
-        public virtual ICollection<Product>? Products { get; set; }
+        public DateTime CreatedAt { get; set; }
     }
 }
