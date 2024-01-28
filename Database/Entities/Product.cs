@@ -1,0 +1,40 @@
+﻿using System.ComponentModel.DataAnnotations;
+using System.Text.Json.Serialization;
+
+namespace Database.Entities
+{
+    public partial class Product
+    {
+        public int Id { get; set; }
+
+        public int CategoryId { get; set; }
+
+        public int BrandId { get; set; }
+
+        [Required]
+        [StringLength(256)]
+        public required string ProductName { get; set; }
+
+        [StringLength(256)]
+        public string Ean { get; set; } = "";
+
+        public decimal Price { get; set; } = 0;
+
+        [StringLength(256)]
+        public string Description { get; set; } = "";
+
+        public int CurrentStock { get; set; }
+
+        public decimal Weight { get; set; }
+
+        public Boolean IsDeactivated { get; set; }
+
+        public DateTime CreatedAt { get; set; }
+
+        public DateTime LastUpdatedAt { get; set;}
+
+        public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
+
+        public virtual ICollection<Color> Colors { get; set; } = new List<Color>();
+    }
+}

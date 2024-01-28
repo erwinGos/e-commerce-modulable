@@ -1,0 +1,6 @@
+@appleEarStore.WebApi_HostAddress = http://localhost:5152
+
+GET {{appleEarStore.WebApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
