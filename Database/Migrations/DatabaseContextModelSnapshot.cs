@@ -132,6 +132,9 @@ namespace Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Brand");
                 });
 
@@ -150,6 +153,9 @@ namespace Database.Migrations
                         .HasColumnType("varchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Categories");
                 });
@@ -171,6 +177,12 @@ namespace Database.Migrations
                         .HasColumnType("varchar(64)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Hex")
+                        .IsUnique();
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Colors");
                 });
@@ -242,6 +254,9 @@ namespace Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("OrderNumber")
+                        .IsUnique();
+
                     b.ToTable("Order");
                 });
 
@@ -293,6 +308,12 @@ namespace Database.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("BrandId");
+
+                    b.HasIndex("Ean")
+                        .IsUnique();
+
+                    b.HasIndex("ProductName")
+                        .IsUnique();
 
                     b.ToTable("Products");
                 });
@@ -387,6 +408,9 @@ namespace Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.ToTable("PromoCode");
                 });
 
@@ -464,6 +488,9 @@ namespace Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("User");
                 });
 
@@ -489,6 +516,37 @@ namespace Database.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserCart");
+                });
+
+            modelBuilder.Entity("Database.Entities.Vouchers", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("HasBeenUsed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("Vouchers");
                 });
 
             modelBuilder.Entity("CategoryProduct", b =>
@@ -597,7 +655,7 @@ namespace Database.Migrations
                         .IsRequired();
 
                     b.HasOne("Database.Entities.User", null)
-                        .WithMany("Carts")
+                        .WithMany("ShoppingCart")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -624,7 +682,7 @@ namespace Database.Migrations
                 {
                     b.Navigation("Addresses");
 
-                    b.Navigation("Carts");
+                    b.Navigation("ShoppingCart");
                 });
 #pragma warning restore 612, 618
         }

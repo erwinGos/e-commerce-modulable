@@ -12,5 +12,7 @@ namespace Data.DTO.User
         public string Name { get; set; }
 
         public string LastName { get; set; }
+
+        public DateTime RegistrationDate { get; set; } = DateTime.Now;
     }
 }

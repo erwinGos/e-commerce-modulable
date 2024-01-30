@@ -65,5 +65,22 @@ namespace Data.Services
             }
         }
 
+        public async Task<User> SignIn(SignInUser signInUser)
+        {
+            try
+            {
+                User user = await _userRepository.FindSingleBy(u => u.Email == signInUser.Email) ?? throw new Exception("L'utilisateur n'existe pas.");
+                if (IdentityManager.VerifyPassword(signInUser.Password, user.Password))
+                {
+                    return user;
+                }
+
+                throw new Exception("Mot de passe incorrect.");
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }
