@@ -37,7 +37,8 @@ namespace Data.Services
             var claims = new[]
             {
                 new Claim("UserId", Convert.ToString(user.Id)),
-                new Claim("UserEmail", user.Email)
+                new Claim("UserEmail", user.Email),
+                new Claim(ClaimTypes.Role, user.IsAdmin ? "Admin" : "User")
             };
 
             var token = new JwtSecurityToken(
