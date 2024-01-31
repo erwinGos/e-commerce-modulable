@@ -1,7 +1,9 @@
 ﻿using Database;
-using Microsoft.AspNetCore.Identity;
+using Data.Repository;
+using Data.Repository.Contract;
+using Data.Services;
+using Data.Services.Contract;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 
 namespace appleEarStore.WebApi
 {
@@ -10,12 +12,15 @@ namespace appleEarStore.WebApi
 
         public static IServiceCollection ConfigureInjectionDependencyRepository(this IServiceCollection services)
         {
+            services.AddScoped<IUserRepository, UserRepository>();
             return services;
         }
 
 
-        public static IServiceCollection ConfigureInjectionDependencyService(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection ConfigureInjectionDependencyService(this IServiceCollection services)
         {
+            services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IAuthenticationService, AuthenticationService>();
             return services;
         }
 
@@ -27,25 +32,6 @@ namespace appleEarStore.WebApi
                 .LogTo(Console.WriteLine, LogLevel.Information)
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors());
-
-            return services;
-        }
-
-    }
-
-    public static class IocConfigurationTest
-    {
-        public static IServiceCollection ConfigureInjectionDependencyRepositoryTest(this IServiceCollection services)
-        {
-            services.ConfigureInjectionDependencyRepository();
-
-            return services;
-
-        }
-
-        public static IServiceCollection ConfigureInjectionDependencyServiceTest(this IServiceCollection services, IConfiguration configuration)
-        {
-            services.ConfigureInjectionDependencyService(configuration);
 
             return services;
         }

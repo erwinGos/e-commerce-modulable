@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240128203832_initialCreate")]
+    [Migration("20240129112843_initialCreate")]
     partial class initialCreate
     {
         /// <inheritdoc />
@@ -245,7 +245,7 @@ namespace Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("Database.Entities.Product", b =>
@@ -337,6 +337,9 @@ namespace Database.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ReturnId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
 
@@ -351,6 +354,8 @@ namespace Database.Migrations
                     b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("ReturnId");
 
                     b.ToTable("ProductOrder");
                 });
@@ -386,6 +391,37 @@ namespace Database.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("PromoCode");
+                });
+
+            modelBuilder.Entity("Database.Entities.Return", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsReceived")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsRefunded")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Return");
                 });
 
             modelBuilder.Entity("Database.Entities.User", b =>
@@ -546,7 +582,13 @@ namespace Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Database.Entities.Return", "Return")
+                        .WithMany("ProductOrders")
+                        .HasForeignKey("ReturnId");
+
                     b.Navigation("Product");
+
+                    b.Navigation("Return");
                 });
 
             modelBuilder.Entity("Database.Entities.UserCart", b =>
@@ -574,6 +616,11 @@ namespace Database.Migrations
             modelBuilder.Entity("Database.Entities.Product", b =>
                 {
                     b.Navigation("ProductImages");
+                });
+
+            modelBuilder.Entity("Database.Entities.Return", b =>
+                {
+                    b.Navigation("ProductOrders");
                 });
 
             modelBuilder.Entity("Database.Entities.User", b =>
