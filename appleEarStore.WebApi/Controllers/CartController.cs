@@ -22,9 +22,46 @@ namespace appleEarStore.WebApi.Controllers
         [HttpGet("self")]
         public async Task<IActionResult> GetShoppingCart()
         {
-            int adminId = Int32.Parse(User.FindFirst("UserId").Value);
-            List<CartRead> userCart = await _cartService.GetShoppingCart(adminId);
-            return Ok(userCart);
+            try
+            {
+                int userId = Int32.Parse(User.FindFirst("UserId").Value);
+                List<CartRead> userCart = await _cartService.GetShoppingCart(userId);
+                return Ok(userCart);
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpPost("addtocart")]
+        public async Task<IActionResult> AddProductToShoppingCart(AddToCart addToCart)
+        {
+            try
+            {
+                int userId = Int32.Parse(User.FindFirst("UserId").Value);
+                CartRead freshCartProduct = await _cartService.AddProductToShoppingCart(addToCart, userId);
+                return Ok(freshCartProduct);
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize]
+        [HttpDelete("removefromCart")]
+        public async Task<IActionResult> RemoveProductFromShoppingCart(int userCartId)
+        {
+            try
+            {
+                int userId = Int32.Parse(User.FindFirst("UserId").Value);
+                CartRead freshCartProduct = await _cartService.RemoveProductFromShoppingCart(userCartId, userId);
+                return Ok(freshCartProduct);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }

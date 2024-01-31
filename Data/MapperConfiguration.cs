@@ -9,11 +9,16 @@ namespace Data
     {
         public MapperConfiguration()
         {
+            // Users
             CreateMap<SignUpUser, User>();
+
+            // Product
             CreateMap<Product, CartProduct>();
+
+            // ShoppingCart
+            CreateMap<AddToCart, UserCart>();
             CreateMap<UserCart, CartRead>()
            .ForMember(dest => dest.Product, opt => opt.MapFrom(src => src.Product));
-
         }
     }
 }
