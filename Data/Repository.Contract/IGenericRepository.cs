@@ -9,7 +9,7 @@ namespace Data.Repository.Contract
 {
     public interface IGenericRepository<T> where T : class
     {
-        public Task<List<T>> FindBy(Expression<Func<T, bool>> expression);
+        public Task<List<T>> FindBy(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includeProperties);
 
         public Task<T> FindSingleBy(Expression<Func<T, bool>> expression);
 
