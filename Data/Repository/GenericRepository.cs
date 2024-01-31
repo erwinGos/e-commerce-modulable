@@ -1,5 +1,6 @@
 ﻿using Database;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace Data.Repository
 {
@@ -15,45 +16,98 @@ namespace Data.Repository
             _table = _db.Set<T>();
         }
 
-        public async Task<List<T>> GetAll()
+        public async Task<List<T>> FindBy(Expression<Func<T, bool>> expression)
         {
-            return await _table.IgnoreAutoIncludes().ToListAsync().ConfigureAwait(false);
+            try
+            {
+                return _table.Where(expression).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
-        public async Task<T> GetById(object id)
+        public async Task<T> FindSingleBy(Expression<Func<T, bool>> expression)
         {
-            T element = await _table.FindAsync(id).ConfigureAwait(false);
-
-            if (element == null)
+            try
             {
-                throw new Exception("Element non trouvé.");
+                return _table.Where(expression).SingleOrDefault();
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
             }
+        }
 
-            return element;
+        public async Task<List<T>> GetAll()
+        {
+            try
+            {
+                return await _table.IgnoreAutoIncludes().ToListAsync().ConfigureAwait(false);
+            }catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<T> GetById(int id)
+        {
+            try
+            {
+                T element = await _table.FindAsync(id).ConfigureAwait(false);
+
+                if (element == null)
+                {
+                    throw new Exception("Element non trouvé.");
+                }
+
+                return element;
+            } catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<T> Insert(T element)
         {
-            var elementAdded = await _table.AddAsync(element).ConfigureAwait(false);
-            await _db.SaveChangesAsync().ConfigureAwait(false);
+            try
+            {
+                var elementAdded = await _table.AddAsync(element).ConfigureAwait(false);
+                await _db.SaveChangesAsync().ConfigureAwait(false);
 
-            return elementAdded.Entity;
+                return elementAdded.Entity;
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<T> Update(T element)
         {
-            var elementUpdated = _table.Update(element);
-            await _db.SaveChangesAsync().ConfigureAwait(false);
+            try
+            {
+                var elementUpdated = _table.Update(element);
+                await _db.SaveChangesAsync().ConfigureAwait(false);
 
-            return elementUpdated.Entity;
+                return elementUpdated.Entity;
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<T> Delete(T element)
         {
-            var elementDeleted = _table.Remove(element);
-            await _db.SaveChangesAsync().ConfigureAwait(false);
+            try
+            {
+                var elementDeleted = _table.Remove(element);
+                await _db.SaveChangesAsync().ConfigureAwait(false);
 
-            return elementDeleted.Entity;
+                return elementDeleted.Entity;
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

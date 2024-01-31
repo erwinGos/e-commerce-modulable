@@ -8,17 +8,17 @@ namespace Database.Entities
         public int Id { get; set; }
 
         [StringLength(320)]
-        public required string Email { get; set; }
+        public string Email { get; set; }
 
         [JsonIgnore]
         [StringLength(256)]
-        public required string Password { get; set; }
+        public string Password { get; set; }
 
         [StringLength(256)]
-        public required string Name { get; set; }
+        public string Name { get; set; }
 
         [StringLength(256)]
-        public required string LastName { get; set; }
+        public string LastName { get; set; }
 
         public decimal Balance { get; set; } = 0;
 
@@ -35,6 +35,6 @@ namespace Database.Entities
 
         public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
 
-        public virtual ICollection<UserCart> Carts { get; set; } = new List<UserCart>();
+        public virtual ICollection<UserCart> ShoppingCart { get; set; } = new List<UserCart>();
     }
 }
