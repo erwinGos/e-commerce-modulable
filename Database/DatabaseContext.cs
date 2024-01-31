@@ -5,12 +5,10 @@ using System.Configuration;
 
 namespace Database
 {
-    public partial class DatabaseContext : DbContext
+    public class DatabaseContext : DbContext
     {
-        public readonly IConfiguration configuration;
-        public DatabaseContext(DbContextOptions<DatabaseContext> options,IConfiguration _configuration) : base(options)
+        public DatabaseContext(DbContextOptions<DatabaseContext> options) : base(options)
         {
-            configuration = _configuration;
         }
 
         public virtual DbSet<Address> Addresses { get; set; }
@@ -41,8 +39,50 @@ namespace Database
 
         public virtual DbSet<Order> WebsiteSettings { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder builder)
+        {
+            builder.Entity<User>(entity => {
+                entity.HasIndex(e => e.Email).IsUnique();
+            });
 
+            builder.Entity<Brand>(entity =>
+            {
+                entity.HasIndex(e => e.Name).IsUnique();
+            });
+
+            builder.Entity<Category>(entity =>
+            {
+                entity.HasIndex(e => e.Name).IsUnique();
+            });
+
+            builder.Entity<Color>(entity =>
+            {
+                entity.HasIndex(e => e.Name).IsUnique();
+                entity.HasIndex(e => e.Hex).IsUnique();
+            });
+            
+            builder.Entity<Order>(entity =>
+            {
+                entity.HasIndex(e => e.OrderNumber).IsUnique();
+            });
+
+            builder.Entity<Product>(entity =>
+            {
+                entity.HasIndex(e => e.Ean).IsUnique();
+                entity.HasIndex(e => e.ProductName).IsUnique();
+            });
+
+            builder.Entity<PromoCode>(entity =>
+            {
+                entity.HasIndex(e => e.Code).IsUnique();
+            });
+
+            builder.Entity<Vouchers>(entity =>
+            {
+                entity.HasIndex(e => e.Code).IsUnique();
+            });
+        }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-                => optionsBuilder.UseMySQL("server=localhost;database=appleearstore;port=3306;User=root;");
+        => optionsBuilder.UseMySQL("server=localhost;database=appleearstore;port=3306;User=root;");
     }
 }

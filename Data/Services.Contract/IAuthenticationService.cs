@@ -5,8 +5,9 @@ namespace Data.Services.Contract
 {
     public interface IAuthenticationService
     {
-        public Task<User> SignUp(SignUpUser signUpUser);
-
         public string GenerateToken(User user);
+        public Task<User> SignUp(SignUpUser signUpUser);
+        public Task<User> SignIn(SignInUser signInUser);
+
     }
 }

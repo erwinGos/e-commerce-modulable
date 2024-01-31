@@ -1,6 +1,7 @@
 ﻿
 
 using BCrypt.Net;
+using System.Net.NetworkInformation;
 
 namespace Data.Managers
 {
@@ -15,6 +16,11 @@ namespace Data.Managers
             string hashedPassword = BCrypt.Net.BCrypt.HashPassword(password, salt);
 
             return hashedPassword;
+        }
+
+        public static bool VerifyPassword(string password, string hashedPassword)
+        {
+            return BCrypt.Net.BCrypt.Verify(password, hashedPassword);
         }
     }
 }

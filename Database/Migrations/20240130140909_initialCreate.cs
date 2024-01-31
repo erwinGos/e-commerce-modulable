@@ -150,6 +150,24 @@ namespace Database.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "Vouchers",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Code = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false),
+                    Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    HasBeenUsed = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ExpirationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Vouchers", x => x.Id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Products",
                 columns: table => new
                 {
@@ -374,6 +392,18 @@ namespace Database.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Brand_Name",
+                table: "Brand",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Categories_Name",
+                table: "Categories",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_CategoryProduct_ProductsId",
                 table: "CategoryProduct",
                 column: "ProductsId");
@@ -387,6 +417,24 @@ namespace Database.Migrations
                 name: "IX_ColorProduct_ProductsId",
                 table: "ColorProduct",
                 column: "ProductsId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Colors_Hex",
+                table: "Colors",
+                column: "Hex",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Colors_Name",
+                table: "Colors",
+                column: "Name",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Order_OrderNumber",
+                table: "Order",
+                column: "OrderNumber",
+                unique: true);
 
             migrationBuilder.CreateIndex(
                 name: "IX_ProductImage_ProductId",
@@ -414,6 +462,30 @@ namespace Database.Migrations
                 column: "BrandId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Products_Ean",
+                table: "Products",
+                column: "Ean",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Products_ProductName",
+                table: "Products",
+                column: "ProductName",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PromoCode_Code",
+                table: "PromoCode",
+                column: "Code",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_User_Email",
+                table: "User",
+                column: "Email",
+                unique: true);
+
+            migrationBuilder.CreateIndex(
                 name: "IX_UserCart_ProductId",
                 table: "UserCart",
                 column: "ProductId");
@@ -422,6 +494,12 @@ namespace Database.Migrations
                 name: "IX_UserCart_UserId",
                 table: "UserCart",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Vouchers_Code",
+                table: "Vouchers",
+                column: "Code",
+                unique: true);
         }
 
         /// <inheritdoc />
@@ -447,6 +525,9 @@ namespace Database.Migrations
 
             migrationBuilder.DropTable(
                 name: "UserCart");
+
+            migrationBuilder.DropTable(
+                name: "Vouchers");
 
             migrationBuilder.DropTable(
                 name: "Categories");
