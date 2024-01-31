@@ -132,6 +132,9 @@ namespace Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Name")
+                        .IsUnique();
+
                     b.ToTable("Brand");
                 });
 
@@ -150,6 +153,9 @@ namespace Database.Migrations
                         .HasColumnType("varchar(256)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Categories");
                 });
@@ -171,6 +177,12 @@ namespace Database.Migrations
                         .HasColumnType("varchar(64)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("Hex")
+                        .IsUnique();
+
+                    b.HasIndex("Name")
+                        .IsUnique();
 
                     b.ToTable("Colors");
                 });
@@ -242,7 +254,10 @@ namespace Database.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Orders");
+                    b.HasIndex("OrderNumber")
+                        .IsUnique();
+
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("Database.Entities.Product", b =>
@@ -294,6 +309,12 @@ namespace Database.Migrations
 
                     b.HasIndex("BrandId");
 
+                    b.HasIndex("Ean")
+                        .IsUnique();
+
+                    b.HasIndex("ProductName")
+                        .IsUnique();
+
                     b.ToTable("Products");
                 });
 
@@ -334,6 +355,9 @@ namespace Database.Migrations
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
 
+                    b.Property<int?>("ReturnId")
+                        .HasColumnType("int");
+
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
 
@@ -348,6 +372,8 @@ namespace Database.Migrations
                     b.HasIndex("OrderId");
 
                     b.HasIndex("ProductId");
+
+                    b.HasIndex("ReturnId");
 
                     b.ToTable("ProductOrder");
                 });
@@ -382,7 +408,41 @@ namespace Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Code")
+                        .IsUnique();
+
                     b.ToTable("PromoCode");
+                });
+
+            modelBuilder.Entity("Database.Entities.Return", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<string>("Address")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("IsReceived")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool>("IsRefunded")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<int>("OrderId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Return");
                 });
 
             modelBuilder.Entity("Database.Entities.User", b =>
@@ -428,6 +488,9 @@ namespace Database.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("Email")
+                        .IsUnique();
+
                     b.ToTable("User");
                 });
 
@@ -453,6 +516,37 @@ namespace Database.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserCart");
+                });
+
+            modelBuilder.Entity("Database.Entities.Vouchers", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("Amount")
+                        .HasColumnType("decimal(18,2)");
+
+                    b.Property<string>("Code")
+                        .IsRequired()
+                        .HasMaxLength(64)
+                        .HasColumnType("varchar(64)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<DateTime>("ExpirationDate")
+                        .HasColumnType("datetime(6)");
+
+                    b.Property<bool>("HasBeenUsed")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("Code")
+                        .IsUnique();
+
+                    b.ToTable("Vouchers");
                 });
 
             modelBuilder.Entity("CategoryProduct", b =>
@@ -543,7 +637,13 @@ namespace Database.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("Database.Entities.Return", "Return")
+                        .WithMany("ProductOrders")
+                        .HasForeignKey("ReturnId");
+
                     b.Navigation("Product");
+
+                    b.Navigation("Return");
                 });
 
             modelBuilder.Entity("Database.Entities.UserCart", b =>
@@ -555,7 +655,7 @@ namespace Database.Migrations
                         .IsRequired();
 
                     b.HasOne("Database.Entities.User", null)
-                        .WithMany("Carts")
+                        .WithMany("ShoppingCart")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
@@ -573,11 +673,16 @@ namespace Database.Migrations
                     b.Navigation("ProductImages");
                 });
 
+            modelBuilder.Entity("Database.Entities.Return", b =>
+                {
+                    b.Navigation("ProductOrders");
+                });
+
             modelBuilder.Entity("Database.Entities.User", b =>
                 {
                     b.Navigation("Addresses");
 
-                    b.Navigation("Carts");
+                    b.Navigation("ShoppingCart");
                 });
 #pragma warning restore 612, 618
         }
