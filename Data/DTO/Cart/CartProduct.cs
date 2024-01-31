@@ -1,12 +1,18 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Database.Entities;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Text;
 using System.Text.Json.Serialization;
+using System.Threading.Tasks;
 
-namespace Database.Entities
+namespace Data.DTO.Cart
 {
-    public partial class Product
+    public class CartProduct
     {
         public int Id { get; set; }
-        
+
         [JsonIgnore]
         public int BrandId { get; set; }
 
@@ -21,30 +27,14 @@ namespace Database.Entities
 
         public decimal PriceWithoutTax { get; set; } = 0;
 
-        [StringLength(256)]
-        public string Description { get; set; } = "";
-
         public int CurrentStock { get; set; }
 
-        public decimal Weight { get; set; }
+        public string Description { get; set; } = "";
 
         public bool IsDeactivated { get; set; }
 
-        public DateTime CreatedAt { get; set; }
-
-        public DateTime LastUpdatedAt { get; set;}
-
         public required virtual Brand Brand { get; set; }
 
-        public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
-
-        public virtual ICollection<Color> Colors { get; set; } = new List<Color>();
-
         public virtual ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
-
-        public object Include(Func<object, object> value)
-        {
-            throw new NotImplementedException();
-        }
     }
 }

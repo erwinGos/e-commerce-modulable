@@ -13,6 +13,7 @@ namespace appleEarStore.WebApi
         public static IServiceCollection ConfigureInjectionDependencyRepository(this IServiceCollection services)
         {
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
             return services;
         }
 
@@ -21,6 +22,7 @@ namespace appleEarStore.WebApi
         {
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
+            services.AddScoped<IShoppingCartService, ShoppingCartService>();
             return services;
         }
 
