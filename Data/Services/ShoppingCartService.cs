@@ -22,7 +22,8 @@ namespace Data.Services
         {
             List<UserCart> userCartsWithProducts = await _shoppingCartRepository.FindBy(
                 e => e.UserId == userId,
-                e => e.Product
+                e => e.Product.ProductImages.Take(1),
+                e => e.Product.Brand
             );
             
             List<CartRead> cartReadList = _mapper.Map<List<CartRead>>(userCartsWithProducts);

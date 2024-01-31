@@ -42,5 +42,9 @@ namespace Database.Entities
 
         public virtual ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
 
+        public object Include(Func<object, object> value)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

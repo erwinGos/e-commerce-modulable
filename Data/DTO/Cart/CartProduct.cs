@@ -32,5 +32,7 @@ namespace Data.DTO.Cart
         public bool IsDeactivated { get; set; }
 
         public required virtual Brand Brand { get; set; }
+
+        public virtual ICollection<ProductImage> ProductImages { get; set; } = new List<ProductImage>();
     }
 }
