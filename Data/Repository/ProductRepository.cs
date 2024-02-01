@@ -43,5 +43,22 @@ namespace Data.Repository
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<Product> GetProductAsync(int productId)
+        {
+            try
+            {
+                var query = _table
+                    .Include(p => p.Brand)
+                    .Include(p => p.ProductImages)
+                    .Include(p => p.Colors);
+                Product product = query.SingleOrDefault(product => product.Id == productId);
+                return product;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

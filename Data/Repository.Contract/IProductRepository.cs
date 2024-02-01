@@ -11,5 +11,7 @@ namespace Data.Repository.Contract
     public interface IProductRepository : IGenericRepository<Product>
     {
         public Task<List<Product>> GetProductListAsync(PaginationParameters parameters);
+
+        public Task<Product> GetProductAsync(int productId);
     }
 }

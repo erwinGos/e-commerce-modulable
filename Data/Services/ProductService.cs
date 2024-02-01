@@ -21,9 +21,29 @@ namespace Data.Services
 
         public async Task<List<ProductRead>> GetProductListAsync(PaginationParameters parameters)
         {
-            List<Product> FilteredProducts = await _productRepository.GetProductListAsync(parameters);
+            try
+            {
+                List<Product> FilteredProducts = await _productRepository.GetProductListAsync(parameters);
 
-            return _mapper.Map<List<ProductRead>>(FilteredProducts);
+                return _mapper.Map<List<ProductRead>>(FilteredProducts);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ProductRead> FindOne(int productId)
+        {
+            try
+            {
+                Product product = await _productRepository.GetProductAsync(productId);
+
+                return _mapper.Map<ProductRead>(product);
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
     }
 }

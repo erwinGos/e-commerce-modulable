@@ -35,7 +35,7 @@ namespace Data.Repository
             }   
         }
 
-        public async Task<T> FindSingleBy(Expression<Func<T, bool>> expression)
+        public async Task<T> FindSingleBy(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includeProperties)
         {
             try
             {

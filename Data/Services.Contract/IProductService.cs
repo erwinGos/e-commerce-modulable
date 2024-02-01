@@ -7,5 +7,7 @@ namespace Data.Services.Contract
     public interface IProductService
     {
         public Task<List<ProductRead>> GetProductListAsync(PaginationParameters parameters);
+
+        public Task<ProductRead> FindOne(int productId);
     }
 }
