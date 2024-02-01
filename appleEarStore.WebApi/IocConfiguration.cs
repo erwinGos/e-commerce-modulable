@@ -14,6 +14,7 @@ namespace appleEarStore.WebApi
         {
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IShoppingCartRepository, ShoppingCartRepository>();
+            services.AddScoped<IProductRepository, ProductRepository>();
             return services;
         }
 
@@ -23,6 +24,7 @@ namespace appleEarStore.WebApi
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IShoppingCartService, ShoppingCartService>();
+            services.AddScoped<IProductService, ProductService>();
             return services;
         }
 
