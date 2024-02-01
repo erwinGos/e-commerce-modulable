@@ -16,7 +16,9 @@ namespace Data.Services
 
         public async Task<List<Product>> GetProductListAsync(PaginationParameters parameters)
         {
+            List<Product> FilteredProducts = await _productRepository.GetProductListAsync(parameters);
 
+            return FilteredProducts;
         }
     }
 }

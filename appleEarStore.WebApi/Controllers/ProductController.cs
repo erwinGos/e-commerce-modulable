@@ -1,7 +1,8 @@
 ﻿using Database.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Data.Services.Contract;
-
+using Data.DTO.Pagination;
+using Database.Entities;
 
 namespace appleEarStore.WebApi.Controllers
 {
@@ -17,10 +18,12 @@ namespace appleEarStore.WebApi.Controllers
         }
 
         [HttpGet]
-        public string[] GetProductListAsync([FromQuery] int page, [FromQuery] int max_items, [FromQuery] string brands)
+        public async Task<List<Product>> GetProductList([FromQuery] int page, [FromQuery] int maxResult, [FromQuery] string? brands, [FromQuery] string? colors)
         {
-            var brandList = brands?.Split(new char[] { '|', ',' }, StringSplitOptions.RemoveEmptyEntries);
-            return brandList;
+            string[] brandList = brands?.Split(new char[] { '|', ',' }, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+            string[] colorList = colors?.Split(new char[] { '|', ',' }, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
+            List<Product> productList = await _productService.GetProductListAsync(new PaginationParameters() { Brands = brandList, MaxResults = maxResult, Page = page, Colors = colorList });
+            return productList;
         }
     }
 }
