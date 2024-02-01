@@ -29,7 +29,6 @@ namespace Data.Services
             );
 
                 List<CartRead> cartReadList = _mapper.Map<List<CartRead>>(userCartsWithProducts);
-                Console.WriteLine(cartReadList);
                 return cartReadList;
             } catch (Exception ex)
             {

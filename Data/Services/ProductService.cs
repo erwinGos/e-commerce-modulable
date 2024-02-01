@@ -1,4 +1,6 @@
-﻿using Data.DTO.Pagination;
+﻿using AutoMapper;
+using Data.DTO.Pagination;
+using Data.DTO.Product;
 using Data.Repository.Contract;
 using Data.Services.Contract;
 using Database.Entities;
@@ -9,16 +11,19 @@ namespace Data.Services
     {
         private readonly IProductRepository _productRepository;
 
-        public ProductService(IProductRepository productRepository)
+        private readonly IMapper _mapper;
+
+        public ProductService(IProductRepository productRepository, IMapper mapper)
         {
             _productRepository = productRepository;
+            _mapper = mapper;
         }
 
-        public async Task<List<Product>> GetProductListAsync(PaginationParameters parameters)
+        public async Task<List<ProductRead>> GetProductListAsync(PaginationParameters parameters)
         {
             List<Product> FilteredProducts = await _productRepository.GetProductListAsync(parameters);
 
-            return FilteredProducts;
+            return _mapper.Map<List<ProductRead>>(FilteredProducts);
         }
     }
 }
