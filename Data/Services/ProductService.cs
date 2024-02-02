@@ -19,6 +19,18 @@ namespace Data.Services
             _mapper = mapper;
         }
 
+        public async Task<ProductRead> CreateProduct(CreateProduct createProduct)
+        {
+            try
+            {
+                Product product = await _productRepository.Insert(_mapper.Map<Product>(createProduct));
+                return _mapper.Map<ProductRead>(product);
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.Message); 
+            }
+        }
+
         public async Task<List<ProductRead>> GetProductListAsync(PaginationParameters parameters)
         {
             try
@@ -41,6 +53,35 @@ namespace Data.Services
 
                 return _mapper.Map<ProductRead>(product);
             } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ProductRead> UpdateProduct(UpdateProduct updateProduct)
+        {
+            try
+            {
+                Product checkIfExists = await _productRepository.GetById(updateProduct.Id) ?? throw new Exception("Le produit n'existe pas."); ;
+                Product productToUpdate = _mapper.Map(updateProduct, checkIfExists);
+                Product updatedProduct = await _productRepository.Update(productToUpdate);
+                return _mapper.Map<ProductRead>(updatedProduct);
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ProductRead> DeactivateProduct(int productId)
+        {
+            try
+            {
+                Product checkIfExists = await _productRepository.GetById(productId) ?? throw new Exception("Le produit n'existe pas."); ;
+                checkIfExists.IsDeactivated = true;
+                Product deletedProduct = await _productRepository.Update(checkIfExists);
+                return _mapper.Map<ProductRead>(deletedProduct);
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }

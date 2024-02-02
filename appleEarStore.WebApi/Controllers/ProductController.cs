@@ -4,6 +4,7 @@ using Data.Services.Contract;
 using Data.DTO.Pagination;
 using Database.Entities;
 using Data.DTO.Product;
+using AutoMapper;
 
 namespace appleEarStore.WebApi.Controllers
 {
@@ -45,6 +46,27 @@ namespace appleEarStore.WebApi.Controllers
             {
                 return BadRequest(ex.Message);
             }
+        }
+
+        [HttpPost("create")]
+        public async Task<IActionResult> UpdateProduct(CreateProduct createProduct)
+        {
+            ProductRead updatedProduct = await _productService.CreateProduct(createProduct);
+            return Ok(updatedProduct);
+        }
+
+        [HttpPatch()]
+        public async Task<IActionResult> UpdateProduct(UpdateProduct updateProduct)
+        {
+            ProductRead updatedProduct = await _productService.UpdateProduct(updateProduct);
+            return Ok(updatedProduct);
+        }
+
+        [HttpDelete()]
+        public async Task<IActionResult> DeleteProduct(int productId)
+        {
+            ProductRead updatedProduct = await _productService.DeactivateProduct(productId);
+            return Ok(updatedProduct);
         }
     }
 }

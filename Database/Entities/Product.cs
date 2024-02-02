@@ -34,7 +34,7 @@ namespace Database.Entities
 
         public DateTime LastUpdatedAt { get; set;}
 
-        public required virtual Brand Brand { get; set; }
+        public virtual Brand Brand { get; set; }
 
         public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
 
