@@ -1,4 +1,5 @@
-﻿using Database.Entities;
+﻿using Data.DTO.Pagination;
+using Database.Entities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,5 +10,8 @@ namespace Data.Repository.Contract
 {
     public interface IProductRepository : IGenericRepository<Product>
     {
+        public Task<List<Product>> GetProductListAsync(PaginationParameters parameters);
+
+        public Task<Product> GetProductAsync(int productId);
     }
 }
