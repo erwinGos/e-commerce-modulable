@@ -2,9 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using Data.Services.Contract;
 using Data.DTO.Pagination;
-using Database.Entities;
 using Data.DTO.Product;
-using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 
 namespace appleEarStore.WebApi.Controllers
 {
@@ -48,6 +47,7 @@ namespace appleEarStore.WebApi.Controllers
             }
         }
 
+        [Authorize]
         [HttpPost("create")]
         public async Task<IActionResult> UpdateProduct(CreateProduct createProduct)
         {
@@ -55,6 +55,7 @@ namespace appleEarStore.WebApi.Controllers
             return Ok(updatedProduct);
         }
 
+        [Authorize]
         [HttpPatch()]
         public async Task<IActionResult> UpdateProduct(UpdateProduct updateProduct)
         {
@@ -62,6 +63,7 @@ namespace appleEarStore.WebApi.Controllers
             return Ok(updatedProduct);
         }
 
+        [Authorize]
         [HttpDelete()]
         public async Task<IActionResult> DeleteProduct(int productId)
         {

@@ -10,11 +10,14 @@ namespace Data.Services
     {
         private readonly IShoppingCartRepository _shoppingCartRepository;
 
+        private readonly IProductRepository _productRepository;
+
         private readonly IMapper _mapper;
 
-        public ShoppingCartService(IShoppingCartRepository shoppingCartRepository, IMapper mapper)
+        public ShoppingCartService(IShoppingCartRepository shoppingCartRepository, IProductRepository productRepository, IMapper mapper)
         {
             _shoppingCartRepository = shoppingCartRepository;
+            _productRepository = productRepository;
             _mapper = mapper;
         }
 
@@ -40,8 +43,8 @@ namespace Data.Services
         {
             try
             {
+                Product CheckIfExists = await _productRepository.FindSingleBy(p => p.Id == addToCart.ProductId) ?? throw new Exception("Produit non trouvé.");
                 UserCart existingUserCartItem = await _shoppingCartRepository.FindSingleBy(uc => uc.ProductId == addToCart.ProductId && uc.UserId == userId);
-                // Ajouter la verification que le produit existe effectivement + Verifier son stock
                 if(existingUserCartItem == null)
                 {
                     UserCart newUserCartItem = _mapper.Map<UserCart>(addToCart);
