@@ -41,11 +41,13 @@ namespace Database.Entities
 
         [Required]
         [StringLength(512)]
-        public required string ParcelTracking { get; set;}
+        public required string ParcelTracking { get; set; }
 
-        public required DateTime EstimatedDeliveryDate { get; set; }
+        public required decimal TotalWeight { get; set; }
 
-        public required DateTime DeliveryDate { get; set; }
+        public DateTime EstimatedDeliveryDate { get; set; }
+
+        public DateTime DeliveryDate { get; set; }
 
         public bool HasBeenPaid { get; set; } = false;
 
