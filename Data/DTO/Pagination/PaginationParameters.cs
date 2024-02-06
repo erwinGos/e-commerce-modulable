@@ -8,6 +8,8 @@ namespace Data.DTO.Pagination
 
         public int MaxResults { get; set; }
 
+        public bool isAdmin { get; set; } = false;
+
         public string[] Colors { get; set; }
 
         public string[] Brands { get; set; }
