@@ -1,6 +1,7 @@
 ﻿using Database.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
 using System.Configuration;
 
 namespace Database
@@ -83,6 +84,7 @@ namespace Database
             });
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySQL("server=localhost;database=appleearstore;port=3306;User=root;");
+        => optionsBuilder.UseMySQL("server=localhost;database=appleearstore;port=3306;User=root;").LogTo(Console.WriteLine, LogLevel.Information)
+                  .EnableSensitiveDataLogging();
     }
 }

@@ -3,6 +3,7 @@ using Data.DTO.Cart;
 using Data.DTO.Category;
 using Data.DTO.Color;
 using Data.DTO.Product;
+using Data.DTO.Promo;
 using Data.DTO.User;
 using Database.Entities;
 
@@ -21,6 +22,9 @@ namespace Data
             //Category
             CreateMap<Category, CategoryRead>();
 
+            // Promo
+            CreateMap<CategoryPromo, Category>();
+            CreateMap<CreatePromo, PromoCode>();
 
             // Product
             CreateMap<Product, CartProduct>();
