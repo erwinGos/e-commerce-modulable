@@ -72,5 +72,17 @@ namespace Data.Services
             }
 
         }
+
+        public async Task<PromoCode> Delete(int promoCodeId)
+        {
+            try
+            {
+                PromoCode promoToDelete = await _promoRepository.GetById(promoCodeId) ?? throw new Exception("Ce code promo n'existe pas, ou a déjà été supprimé.");
+                return await _promoRepository.Delete(promoToDelete);
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

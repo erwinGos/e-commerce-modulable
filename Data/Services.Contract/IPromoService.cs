@@ -16,5 +16,7 @@ namespace Data.Services.Contract
 
         public Task<PromoCode> CreatePromo(CreatePromo createPromo);
 
+        public Task<PromoCode> Delete(int promoCodeId);
+
     }
 }

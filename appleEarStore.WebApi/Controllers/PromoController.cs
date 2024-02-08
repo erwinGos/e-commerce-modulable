@@ -61,5 +61,20 @@ namespace appleEarStore.WebApi.Controllers
                 return BadRequest(ex.Message);
             }
         }
+
+        [HttpDelete()]
+        [Authorize(Roles = "Admin")]
+
+        public async Task<IActionResult> DeletePromo(int promoCodeId)
+        {
+            try
+            {
+                PromoCode deletedPromo = await _promoService.Delete(promoCodeId);
+                return Ok(deletedPromo);
+            } catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
     }
 }
