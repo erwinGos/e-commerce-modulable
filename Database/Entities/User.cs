@@ -8,6 +8,7 @@ namespace Database.Entities
         public int Id { get; set; }
 
         [StringLength(320)]
+        [EmailAddress]
         public string Email { get; set; }
 
         [JsonIgnore]

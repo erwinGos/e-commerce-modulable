@@ -16,19 +16,26 @@ namespace Data.Repository
             _table = _db.Set<T>();
         }
 
-        public async Task<List<T>> FindBy(Expression<Func<T, bool>> expression)
+        public async Task<List<T>> FindBy(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includeProperties)
         {
             try
             {
-                return _table.Where(expression).ToList();
+                IQueryable<T> query = _table;
+
+                foreach (var includeProperty in includeProperties)
+                {
+                    query = query.Include(includeProperty);
+                }
+
+                return query.Where(expression).ToList();
             }
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
-            }
+            }   
         }
 
-        public async Task<T> FindSingleBy(Expression<Func<T, bool>> expression)
+        public async Task<T> FindSingleBy(Expression<Func<T, bool>> expression, params Expression<Func<T, object>>[] includeProperties)
         {
             try
             {
