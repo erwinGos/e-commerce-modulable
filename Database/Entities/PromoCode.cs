@@ -30,6 +30,6 @@ namespace Database.Entities
 
         public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
 
-        public virtual ICollection<User> Users { get; set; }
+
     }
 }
