@@ -4,6 +4,7 @@ using Data.Services.Contract;
 using Data.DTO.User;
 using System.Globalization;
 using Microsoft.AspNetCore.Http.HttpResults;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace appleEarStore.WebApi.Controllers
@@ -17,6 +18,15 @@ namespace appleEarStore.WebApi.Controllers
         public AuthController(IAuthenticationService authService)
         {
             _AuthenticationService = authService;
+        }
+
+
+
+        [Authorize]
+        [HttpPost("checkAuth")]
+        public async Task<IActionResult> CheckAuth()
+        {
+            return Ok();
         }
 
         [HttpPost("signup")]
