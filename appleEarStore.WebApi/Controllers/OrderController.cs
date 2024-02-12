@@ -83,19 +83,5 @@ namespace appleEarStore.WebApi.Controllers
             }
         }
 
-        [HttpPost("create")]
-        [Authorize]
-        public async Task<IActionResult> CreateOrder(CreateOrder order)
-        {
-            try
-            {
-                int userId = Int32.Parse(User.FindFirst("UserId").Value);
-                Order createdOrder = await _OrderService.CreateOrder(order, userId);
-                return Ok(createdOrder);
-            } catch (Exception ex)
-            {
-                return BadRequest(new {message = ex.Message});
-            }
-        }
     }
 }
