@@ -13,11 +13,5 @@ namespace Data.DTO.Product
         public int ProductId { get; set; }
 
         public int Quantity { get; set; } = 1;
-
-        public int PromoCodeId { get; set; }
-
-        public decimal TotalWithoutTax { get; set; } = decimal.Zero;
-
-        public decimal Total { get; set; } = decimal.Zero;
     }
 }

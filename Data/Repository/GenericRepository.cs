@@ -1,6 +1,7 @@
 ﻿using Database;
 using Microsoft.EntityFrameworkCore;
 using System.Linq.Expressions;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Data.Repository
 {
@@ -39,7 +40,14 @@ namespace Data.Repository
         {
             try
             {
-                return _table.Where(expression).SingleOrDefault();
+                IQueryable<T> query = _table;
+
+                foreach (var includeProperty in includeProperties)
+                {
+                    query = query.Include(includeProperty);
+                }
+
+                return query.Where(expression).SingleOrDefault();
             } catch (Exception ex)
             {
                 throw new Exception(ex.Message);

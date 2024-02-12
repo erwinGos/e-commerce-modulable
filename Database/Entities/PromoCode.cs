@@ -22,10 +22,14 @@ namespace Database.Entities
 
         public decimal DiscountPercentage { get; set; }
 
+        public bool SingleTimeUsage { get; set; } = true;
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime ExpirationDate { get; set; }
 
         public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
+
+        public virtual ICollection<User> Users { get; set; }
     }
 }
