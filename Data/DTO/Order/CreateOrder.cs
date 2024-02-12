@@ -5,7 +5,7 @@ namespace Data.DTO.Order
 {
     public class CreateOrder
     {
-        public string PromoCode { get; set; } = null;
+        public List<string> PromoCode { get; set; } = null;
 
         public decimal UsedBalance { get; set; } = decimal.Zero;
 

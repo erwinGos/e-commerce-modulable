@@ -19,6 +19,8 @@ namespace Database.Entities
 
         public decimal Total { get; set;}
 
+        public string UsedPromoCode { get; set; }
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime UpdatedAt { get; set; }
