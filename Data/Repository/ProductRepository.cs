@@ -31,6 +31,8 @@ namespace Data.Repository
                 var query = _table
                     .Include(p => p.Brand)
                     .Include(p => p.Colors)
+                    .Include(p => p.Categories)
+                    .Include(p => p.ProductImages)
                     .Skip((parameters.Page - 1) * parameters.MaxResults)
                     .Take(parameters.MaxResults);
 
@@ -51,6 +53,7 @@ namespace Data.Repository
                 var query = _table
                     .Include(p => p.Brand)
                     .Include(p => p.ProductImages)
+                    .Include(p => p.Categories)
                     .Include(p => p.Colors);
                 Product product = query.SingleOrDefault(product => product.Id == productId);
                 return product;

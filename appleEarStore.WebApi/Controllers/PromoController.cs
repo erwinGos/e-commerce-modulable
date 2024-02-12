@@ -53,6 +53,7 @@ namespace appleEarStore.WebApi.Controllers
         {
             try
             {
+                createPromo.DiscountPercentage /= 100;
                 PromoCode PromoCode = await _promoService.CreatePromo(createPromo);
                 return Ok(PromoCode);
             }
