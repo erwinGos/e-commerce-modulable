@@ -60,15 +60,6 @@ namespace Data.Services
             }
         }
 
-        public async Task<Order> CreateOrder(CreateOrder order, int userId)
-        {   
-            try
-            {
-                
-            } catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
+
     }
 }
