@@ -37,5 +37,7 @@ namespace Database.Entities
         public virtual ICollection<Address> Addresses { get; set; } = new List<Address>();
 
         public virtual ICollection<UserCart> ShoppingCart { get; set; } = new List<UserCart>();
+
+        public virtual ICollection<PromoCode> PromoCodes { get; set; }
     }
 }

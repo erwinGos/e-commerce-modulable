@@ -1,4 +1,5 @@
 ﻿using Data.DTO.Category;
+using Data.DTO.Product;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -22,6 +23,6 @@ namespace Data.DTO.Promo
 
         public required DateTime ExpirationDate { get; set; }
 
-        public virtual ICollection<CategoryPromo> Categories { get; set; }
+        public virtual ICollection<ProductPromo> Products { get; set; }
     }
 }

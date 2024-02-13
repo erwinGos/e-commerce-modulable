@@ -18,6 +18,9 @@ namespace appleEarStore.WebApi
             services.AddScoped<IOrderRepository, OrderRepository>();
             services.AddScoped<IPromoRepository, PromoRepository>();
             services.AddScoped<ICategoryRepository, CategoryRepository>();
+            services.AddScoped<IProductOrderRepository, ProductOrderRepository>();
+            services.AddScoped<IAddressRepository, AddressRepository>();
+
             return services;
         }
 

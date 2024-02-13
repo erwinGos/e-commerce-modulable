@@ -15,6 +15,7 @@ namespace appleEarStore.WebApi.Controllers
     {
         private readonly IOrderService _OrderService;
 
+
         public OrderController(IOrderService orderService)
         {
             _OrderService = orderService;
@@ -78,6 +79,23 @@ namespace appleEarStore.WebApi.Controllers
                 return Ok(orders);
             }
             catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("create")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CreateOrder(CreateOrder createOrder)
+        {
+            try
+            {
+                int userId = Int32.Parse(User.FindFirst("UserId").Value);
+                Order order = await _OrderService.CreateOrder(createOrder, userId);
+
+                return Ok(order);
+
+            } catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
             }

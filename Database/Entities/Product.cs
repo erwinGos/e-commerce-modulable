@@ -36,6 +36,8 @@ namespace Database.Entities
 
         public virtual Brand Brand { get; set; }
 
+        public virtual ICollection<PromoCode> PromoCodes { get; set; } = new List<PromoCode>();
+
         public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
 
         public virtual ICollection<Color> Colors { get; set; } = new List<Color>();

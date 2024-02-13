@@ -23,7 +23,7 @@ namespace Data
             CreateMap<Category, CategoryRead>();
 
             // Promo
-            CreateMap<CategoryPromo, Category>();
+            CreateMap<ProductPromo, Product>();
             CreateMap<CreatePromo, PromoCode>();
 
             // Product
