@@ -67,16 +67,26 @@ namespace Data.Services
         public async Task<Order> CreateOrder(CreateOrder createOrder, int userId)
         {
             decimal totalWithoutTax = 0;
+            decimal Discount_amount = 0;
             decimal total = 0;
             decimal totalWeight = 0;
             List<ProductOrder> productOrderList = [];
+            List<PromoCode> UsedPromoCodes = []; 
             try
             {
                 // Rechercher l'utilisateur. if null throw ERROR
                 User user = await _userRepository.FindSingleBy(user => user.Id == userId, user => user.PromoCodes) ?? throw new Exception("Utilisateur non trouvé.");
-                
+                List<PromoCode> checkIfAlreadyUsedPromoCodes = user.PromoCodes.Where(promo => createOrder.PromoCode.Any(plannedToBeUsedPromo => plannedToBeUsedPromo == promo.Code)).ToList();
+                if(checkIfAlreadyUsedPromoCodes.Count > 0)
+                {
+                    throw new Exception("Vous avez déjà utilisé le(s) code(s) promotionnel(s) suivant(s) : " + string.Join(", ", checkIfAlreadyUsedPromoCodes.Select(promo => promo.Code)));
+                }
                 // Verifie si l'utilsateur a déjà des commandes non payés. if !null throw ERROR
-                Order checkIfHasUnpaidOrder = await _orderRepository.FindSingleBy(order => order.UserId == userId && order.HasBeenPaid == false) != null ? throw new Exception("Vous ne pouvez pas passer commande. Veuillez Payer vos commandes déjà dues.") : null;
+                List<Order> checkIfHasUnpaidOrder = await _orderRepository.FindBy(order => order.UserId == userId && order.HasBeenPaid == false);
+                if(checkIfHasUnpaidOrder.Count > 0)
+                {
+                    throw new Exception("Vous ne pouvez pas passer commande. Veuillez Payer vos commandes déjà dues.");
+                }
                 
                 // Rechercher l'adresse de l'utilisateur. if null throw ERROR
                 Address address = await _addressRepository.FindSingleBy(address => address.Id == createOrder.AddressId && address.UserId == userId) ?? throw new Exception("Cette addresse n'est pas valide. Veuillez reessayer une addresse différente."); // A SUPPRIMER A LA FIN !!
@@ -109,16 +119,24 @@ namespace Data.Services
                         if(product.PromoCodes.Count > 0)
                         {
                             var highestDiscountPromoCode = product.PromoCodes
-                                .Where(promo => createOrder.PromoCode.Contains(promo.Code))
-                                .OrderByDescending(promo => promo.DiscountPercentage)
-                                .FirstOrDefault();
+                            .OrderByDescending(promo => promo.DiscountPercentage)
+                            .Where(promo => createOrder.PromoCode.Any(code => code == promo.Code))
+                            .FirstOrDefault();
                             if (highestDiscountPromoCode != null)
                             {
+                                decimal TotalPoWithoutDiscount = product.Price * poc.Quantity;
                                 decimal ProductPriceAfterDiscount = product.Price * (1 - highestDiscountPromoCode.DiscountPercentage);
                                 decimal TotalPo = ProductPriceAfterDiscount * poc.Quantity;
                                 total += TotalPo;
+                                Discount_amount += TotalPoWithoutDiscount - TotalPo;
                                 productOrder.Total = TotalPo;
                                 productOrder.UsedPromoCode = highestDiscountPromoCode.Code;
+                                productOrder.Discount_Amount = TotalPoWithoutDiscount - TotalPo;
+                                // Ajout du promocode utilisé a la liste afin de le rendre inutilisable la prochaine fois.
+                                if(highestDiscountPromoCode.SingleTimeUsage)
+                                {
+                                    user.PromoCodes.Add(highestDiscountPromoCode);
+                                }
                             } else
                             {
                                 decimal TotalPo = product.Price * poc.Quantity;
@@ -147,6 +165,7 @@ namespace Data.Services
                 {
                     UserId = userId,
                     Total_without_tax = totalWithoutTax,
+                    Discount_amount = Discount_amount,
                     Total = (total - createOrder.UsedBalance),
                     TotalWeight = totalWeight,
                     OrderNumber = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString(),
