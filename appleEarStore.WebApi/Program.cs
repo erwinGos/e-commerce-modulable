@@ -18,18 +18,20 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAll", builder =>
+options.AddPolicy("AllowAll", 
+    builder =>
     {
-        builder.AllowAnyOrigin()
-               .AllowAnyMethod()
-               .AllowAnyHeader();
+        builder.WithOrigins("http://localhost:3000") // Remplacez par l'URL de votre client
+                       .AllowCredentials()
+                       .AllowAnyHeader()
+                       .AllowAnyMethod();
     });
 });
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new OpenApiInfo { Title = "Mon API", Version = "v1" });
 
-    // Configuration de la sécurité Bearer
+    // Configuration de la sÃ©curitÃ© Bearer
     c.AddSecurityDefinition("Bearer", new OpenApiSecurityScheme
     {
         Description = "JWT Authorization header utilisant le Bearer scheme. Exemple: \"Authorization: Bearer {token}\"",
