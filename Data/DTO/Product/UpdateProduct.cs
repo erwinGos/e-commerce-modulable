@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Data.DTO.Product
+namespace Data.DTO.ProductDto
 {
     public class UpdateProduct
     {

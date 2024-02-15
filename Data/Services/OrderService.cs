@@ -1,10 +1,14 @@
 ﻿using Data.DTO.Order;
 using Data.DTO.Pagination;
-using Data.DTO.Product;
+using Data.DTO.ProductDto;
 using Data.Managers;
 using Data.Repository.Contract;
 using Data.Services.Contract;
 using Database.Entities;
+using Google.Protobuf.WellKnownTypes;
+using System.Globalization;
+using System;
+using AutoMapper;
 
 namespace Data.Services
 {
@@ -16,8 +20,10 @@ namespace Data.Services
         private readonly IPromoRepository _promoRepository;
         private readonly IProductOrderRepository _productOrderRepository;
         private readonly IAddressRepository _addressRepository;
+        private readonly IMapper _mapper;
+        private readonly OrderManager _orderManager;
 
-        public OrderService(IOrderRepository orderRepository, IUserRepository userRepository, IProductRepository productRepository, IPromoRepository promoRepository, IProductOrderRepository productOrderRepository, IAddressRepository addressRepository)
+        public OrderService(OrderManager orderManager, IMapper mapper, IOrderRepository orderRepository, IUserRepository userRepository, IProductRepository productRepository, IPromoRepository promoRepository, IProductOrderRepository productOrderRepository, IAddressRepository addressRepository)
         {
             _orderRepository = orderRepository;
             _userRepository = userRepository;
@@ -25,6 +31,8 @@ namespace Data.Services
             _productRepository = productRepository;
             _productOrderRepository = productOrderRepository;
             _addressRepository = addressRepository;
+            _mapper = mapper;
+            _orderManager = orderManager;
         }
 
         public async Task<Order> GetSingleOrder(int orderId, int userId, PaginationParameters parameters)
@@ -64,7 +72,7 @@ namespace Data.Services
             }
         }
 
-        public async Task<Order> CreateOrder(CreateOrder createOrder, int userId)
+        public async Task<OrderRead> CreateOrder(CreateOrder createOrder, int userId)
         {
             decimal totalWithoutTax = 0;
             decimal Discount_amount = 0;
@@ -74,28 +82,14 @@ namespace Data.Services
             List<PromoCode> UsedPromoCodes = []; 
             try
             {
-                // Rechercher l'utilisateur. if null throw ERROR
-                User user = await _userRepository.FindSingleBy(user => user.Id == userId, user => user.PromoCodes) ?? throw new Exception("Utilisateur non trouvé.");
-                List<PromoCode> checkIfAlreadyUsedPromoCodes = user.PromoCodes.Where(promo => createOrder.PromoCode.Any(plannedToBeUsedPromo => plannedToBeUsedPromo == promo.Code)).ToList();
-                if(checkIfAlreadyUsedPromoCodes.Count > 0)
-                {
-                    throw new Exception("Vous avez déjà utilisé le(s) code(s) promotionnel(s) suivant(s) : " + string.Join(", ", checkIfAlreadyUsedPromoCodes.Select(promo => promo.Code)));
-                }
-                // Verifie si l'utilsateur a déjà des commandes non payés. if !null throw ERROR
-                List<Order> checkIfHasUnpaidOrder = await _orderRepository.FindBy(order => order.UserId == userId && order.HasBeenPaid == false);
-                if(checkIfHasUnpaidOrder.Count > 0)
-                {
-                    throw new Exception("Vous ne pouvez pas passer commande. Veuillez Payer vos commandes déjà dues.");
-                }
-                
                 // Rechercher l'adresse de l'utilisateur. if null throw ERROR
                 Address address = await _addressRepository.FindSingleBy(address => address.Id == createOrder.AddressId && address.UserId == userId) ?? throw new Exception("Cette addresse n'est pas valide. Veuillez reessayer une addresse différente."); // A SUPPRIMER A LA FIN !!
+
+                // Rechercher l'utilisateur. if null throw ERROR
+                User user = await _userRepository.FindSingleBy(user => user.Id == userId, user => user.PromoCodes) ?? throw new Exception("Utilisateur non trouvé.");
                 
-                // Verifie si la somme utilisé lors de la commande est inférieur au solde de l'utilsateur.
-                if (user.Balance < createOrder.UsedBalance)
-                {
-                    throw new Exception("Votre solde est inférieur à la somme renseignée. Veuillez la réajuster.");
-                }
+                //Verifications : PromoCode expiration, UnpaidOrders, Verifie le solde utilisateur et PromoCode alreadyUsed if needed
+                await _orderManager.CheckForOrder(user, createOrder);
 
                 foreach (ProductOrderCreate poc in createOrder.Products)
                 {
@@ -188,7 +182,7 @@ namespace Data.Services
                 }
                 User updateUser = await _userRepository.Update(user);
 
-                return createdOrder;
+                return _mapper.Map<OrderRead>(createdOrder);
 
             } catch(Exception ex)
             {

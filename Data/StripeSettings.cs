@@ -4,10 +4,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data.DTO.ProductDto
+namespace Data
 {
-    public class ProductPromo
+    public class StripeSettings
     {
-        public int Id { get; set; }
+        public string ApiKey { get; set; }
     }
 }

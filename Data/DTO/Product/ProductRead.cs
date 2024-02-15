@@ -1,8 +1,9 @@
 ﻿using Data.DTO.Category;
 using Data.DTO.Color;
 using Database.Entities;
+using System.ComponentModel.DataAnnotations;
 
-namespace Data.DTO.Product
+namespace Data.DTO.ProductDto
 {
     public class ProductRead
     {
@@ -24,9 +25,13 @@ namespace Data.DTO.Product
 
         public bool IsDeactivated { get; set; }
 
+        [StringLength(256)]
+        public string StripeProductId { get; set; } = "";
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime LastUpdatedAt { get; set; }
+
 
         public required virtual Brand Brand { get; set; }
 

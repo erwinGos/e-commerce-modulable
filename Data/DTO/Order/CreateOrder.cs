@@ -1,5 +1,5 @@
 ﻿
-using Data.DTO.Product;
+using Data.DTO.ProductDto;
 
 namespace Data.DTO.Order
 {

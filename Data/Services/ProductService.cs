@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Data.DTO.Pagination;
-using Data.DTO.Product;
+using Data.DTO.ProductDto;
 using Data.Repository.Contract;
 using Data.Services.Contract;
 using Database.Entities;
@@ -58,13 +58,12 @@ namespace Data.Services
             }
         }
 
-        public async Task<ProductRead> UpdateProduct(UpdateProduct updateProduct)
+        public async Task<ProductRead> UpdateProduct(Product updateProduct)
         {
             try
             {
                 Product checkIfExists = await _productRepository.GetById(updateProduct.Id) ?? throw new Exception("Le produit n'existe pas."); ;
-                Product productToUpdate = _mapper.Map(updateProduct, checkIfExists);
-                Product updatedProduct = await _productRepository.Update(productToUpdate);
+                Product updatedProduct = await _productRepository.Update(updateProduct);
                 return _mapper.Map<ProductRead>(updatedProduct);
             } catch (Exception ex)
             {
@@ -80,6 +79,19 @@ namespace Data.Services
                 checkIfExists.IsDeactivated = true;
                 Product deletedProduct = await _productRepository.Update(checkIfExists);
                 return _mapper.Map<ProductRead>(deletedProduct);
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<ProductRead> SaveUpDatabase(Product product)
+        {
+            try
+            {
+
+                return _mapper.Map<ProductRead>(product);
             }
             catch (Exception ex)
             {

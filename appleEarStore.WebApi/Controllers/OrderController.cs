@@ -6,7 +6,6 @@ using Data.DTO.Pagination;
 using System.Security.Claims;
 using Data.DTO.Order;
 
-
 namespace appleEarStore.WebApi.Controllers
 {
     [ApiController]
@@ -91,7 +90,7 @@ namespace appleEarStore.WebApi.Controllers
             try
             {
                 int userId = Int32.Parse(User.FindFirst("UserId").Value);
-                Order order = await _OrderService.CreateOrder(createOrder, userId);
+                OrderRead order = await _OrderService.CreateOrder(createOrder, userId);
 
                 return Ok(order);
 

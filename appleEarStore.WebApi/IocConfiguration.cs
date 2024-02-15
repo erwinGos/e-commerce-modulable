@@ -4,6 +4,8 @@ using Data.Repository.Contract;
 using Data.Services;
 using Data.Services.Contract;
 using Microsoft.EntityFrameworkCore;
+using Data.Managers;
+using Stripe;
 
 namespace appleEarStore.WebApi
 {
@@ -30,10 +32,18 @@ namespace appleEarStore.WebApi
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
             services.AddScoped<IShoppingCartService, ShoppingCartService>();
-            services.AddScoped<IProductService, ProductService>();
+            services.AddScoped<IProductService, Data.Services.ProductService>();
             services.AddScoped<IOrderService, OrderService>();  
             services.AddScoped<IPromoService, PromoService>();
 
+
+            //Order Manager
+            services.AddScoped<OrderManager>();
+
+
+            //Stripe
+            services.AddScoped<Stripe.ProductService>();
+            services.AddScoped<IStripeService, StripeService>();
             return services;
         }
 

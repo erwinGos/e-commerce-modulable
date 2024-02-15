@@ -1,5 +1,5 @@
 ﻿using Data.DTO.Pagination;
-using Data.DTO.Product;
+using Data.DTO.ProductDto;
 using Database.Entities;
 
 namespace Data.Services.Contract
@@ -10,10 +10,12 @@ namespace Data.Services.Contract
 
         public Task<ProductRead> FindOne(int productId);
 
-        public Task<ProductRead> UpdateProduct(UpdateProduct product);
+        public Task<ProductRead> UpdateProduct(Product product);
 
         public Task<ProductRead> DeactivateProduct(int productId);
 
         public Task<ProductRead> CreateProduct(CreateProduct createProduct);
+
+        public Task<ProductRead> SaveUpDatabase(Product product);
     }
 }

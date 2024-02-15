@@ -1,5 +1,5 @@
 ﻿using Data.DTO.Category;
-using Data.DTO.Product;
+using Data.DTO.ProductDto;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;

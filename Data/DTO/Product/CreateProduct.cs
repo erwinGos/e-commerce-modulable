@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.ComponentModel.DataAnnotations;
 
-namespace Data.DTO.Product
+namespace Data.DTO.ProductDto
 {
     public class CreateProduct
     {
@@ -31,6 +26,8 @@ namespace Data.DTO.Product
 
         [Required(ErrorMessage = "Veuillez saisir un poids (en grammes).")]
         public decimal Weight { get; set; }
+
+        public string StripeProductId { get; set; } = "";
 
         public bool IsDeactivated { get; set; } = false;
 

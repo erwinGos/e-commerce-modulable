@@ -30,6 +30,9 @@ namespace Database.Entities
 
         public bool IsDeactivated { get; set; }
 
+        [StringLength(256)]
+        public string StripeProductId { get; set; } = "";
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime LastUpdatedAt { get; set;}

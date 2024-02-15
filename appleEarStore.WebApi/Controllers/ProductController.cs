@@ -2,8 +2,11 @@
 using Microsoft.AspNetCore.Mvc;
 using Data.Services.Contract;
 using Data.DTO.Pagination;
-using Data.DTO.Product;
+using Data.DTO.ProductDto;
 using Microsoft.AspNetCore.Authorization;
+using Stripe;
+using Stripe.Climate;
+using AutoMapper;
 
 namespace appleEarStore.WebApi.Controllers
 {
@@ -12,10 +15,14 @@ namespace appleEarStore.WebApi.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
+        private readonly IStripeService _stripeService;
+        private readonly IMapper _mapper;
 
-        public ProductController(IProductService productService)
+        public ProductController(IMapper mapper, IProductService productService, IStripeService stripeService)
         {
+            _stripeService = stripeService;
             _productService = productService;
+            _mapper = mapper;
         }
 
         [HttpGet]
@@ -49,17 +56,27 @@ namespace appleEarStore.WebApi.Controllers
 
         [Authorize]
         [HttpPost("create")]
-        public async Task<IActionResult> UpdateProduct(CreateProduct createProduct)
+        public async Task<IActionResult> CreateProduct(CreateProduct createProduct)
         {
-            ProductRead updatedProduct = await _productService.CreateProduct(createProduct);
-            return Ok(updatedProduct);
+            try
+            {
+                ProductRead createdProduct = await _productService.CreateProduct(createProduct);
+                Stripe.Product stripeProduct = await _stripeService.CreateProduct(createProduct);
+
+                createdProduct.StripeProductId = stripeProduct.Id;
+                await _productService.SaveUpDatabase(_mapper.Map<Database.Entities.Product>(createdProduct));
+                return Ok(createdProduct);
+            } catch (Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
         }
 
         [Authorize]
         [HttpPatch()]
         public async Task<IActionResult> UpdateProduct(UpdateProduct updateProduct)
         {
-            ProductRead updatedProduct = await _productService.UpdateProduct(updateProduct);
+            ProductRead updatedProduct = await _productService.UpdateProduct(_mapper.Map<Database.Entities.Product>(updateProduct));
             return Ok(updatedProduct);
         }
 
@@ -67,8 +84,15 @@ namespace appleEarStore.WebApi.Controllers
         [HttpDelete()]
         public async Task<IActionResult> DeleteProduct(int productId)
         {
-            ProductRead updatedProduct = await _productService.DeactivateProduct(productId);
-            return Ok(updatedProduct);
+            try
+            {
+                ProductRead updatedProduct = await _productService.DeactivateProduct(productId);
+                Task<String> removeProductReturn = _stripeService.RemoveProduct(updatedProduct);
+                return Ok(new { Product = updatedProduct , Message = removeProductReturn });
+            } catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
         }
     }
 }
