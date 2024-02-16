@@ -15,7 +15,5 @@ namespace Data.Services.Contract
         public Task<ProductRead> DeactivateProduct(int productId);
 
         public Task<ProductRead> CreateProduct(CreateProduct createProduct);
-
-        public Task<ProductRead> SaveUpDatabase(Product product);
     }
 }

@@ -1,4 +1,5 @@
 ﻿using Data.DTO.Order;
+using Data.Repository;
 using Data.Repository.Contract;
 using Database.Entities;
 
@@ -10,10 +11,13 @@ namespace Data.Managers
 
         private readonly IPromoRepository _promoRepository;
         private readonly IOrderRepository _orderRepository;
-        public OrderManager(IPromoRepository promoRepository, IOrderRepository orderRepository)
+        private readonly IProductRepository _productRepository;
+        public OrderManager(IPromoRepository promoRepository, IOrderRepository orderRepository, IProductRepository productRepository)
         {
             _promoRepository = promoRepository;
             _orderRepository = orderRepository;
+            _productRepository = productRepository;
+            _productRepository = productRepository;
         }
 
 
@@ -64,7 +68,14 @@ namespace Data.Managers
 
                 //Verifie si le code est expiré
                 List<PromoCode> RequestedPromoCodes = await _promoRepository.FindBy(promo => createOrder.PromoCode.Any(code => code == promo.Code));
+                var requestedProductIds = createOrder.Products.Select(p => p.ProductId).ToList();
+                var requestedProducts = await _productRepository.FindBy(product => requestedProductIds.Contains(product.Id));
                 IEnumerable<PromoCode> CheckIfPromoIsExpired = RequestedPromoCodes.Where(promo => promo.ExpirationDate < DateTime.Now);
+
+                if(requestedProducts.Any(product => product.IsDeactivated == true))
+                {
+                    throw new Exception("Un ou plusieurs produit(s) de votre commande semblent ne plus exister ou sont désactivés.");
+                }
 
                 if (CheckIfPromoIsExpired.Count() > 0)
                 {

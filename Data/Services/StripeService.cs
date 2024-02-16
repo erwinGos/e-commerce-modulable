@@ -7,10 +7,12 @@ namespace Data.Services
     public class StripeService : IStripeService
     {
         private readonly Stripe.ProductService _productService;
+        private readonly Stripe.PriceService _priceService;
 
-        public StripeService(Stripe.ProductService productService)
+        public StripeService(Stripe.ProductService productService, Stripe.PriceService priceService)
         {
             _productService = productService;
+            _priceService = priceService;
         }
 
         public async Task<Stripe.Product> CreateProduct(CreateProduct product)
@@ -30,19 +32,22 @@ namespace Data.Services
             return await _productService.CreateAsync(productCreateOptions);
         }
 
-        public async Task<string> RemoveProduct(ProductRead product)
+        public async Task<string> RemoveProduct(string StripeProductId)
         {
             try
             {
                 try
                 {
-                    await _productService.DeleteAsync(product.StripeProductId);
+                    StripeList<Price> prices = _priceService.List(new PriceListOptions { Product = StripeProductId });
+
+
+                    await _productService.DeleteAsync(StripeProductId);
                     return "Produit supprimé.";
                 } catch(StripeException ex)
                 {
                     try
                     {
-                        await _productService.UpdateAsync(product.StripeProductId, new ProductUpdateOptions { Active = false });
+                        await _productService.UpdateAsync(StripeProductId, new ProductUpdateOptions { Active = false });
                         return "Produit archivé.";
                     } catch(StripeException ex2)
                     {

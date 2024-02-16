@@ -58,16 +58,24 @@ namespace appleEarStore.WebApi.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateProduct(CreateProduct createProduct)
         {
+            Stripe.Product stripeProduct = null;
+
             try
             {
+                stripeProduct = await _stripeService.CreateProduct(createProduct);
+                createProduct.StripeProductId = stripeProduct.Id;
                 ProductRead createdProduct = await _productService.CreateProduct(createProduct);
-                Stripe.Product stripeProduct = await _stripeService.CreateProduct(createProduct);
 
-                createdProduct.StripeProductId = stripeProduct.Id;
-                await _productService.SaveUpDatabase(_mapper.Map<Database.Entities.Product>(createdProduct));
+                
+
                 return Ok(createdProduct);
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
+                if (stripeProduct != null)
+                {
+                    await _stripeService.RemoveProduct(stripeProduct.Id);
+                }
                 return BadRequest(new { ex.Message });
             }
         }
@@ -87,8 +95,12 @@ namespace appleEarStore.WebApi.Controllers
             try
             {
                 ProductRead updatedProduct = await _productService.DeactivateProduct(productId);
-                Task<String> removeProductReturn = _stripeService.RemoveProduct(updatedProduct);
-                return Ok(new { Product = updatedProduct , Message = removeProductReturn });
+                if(updatedProduct.StripeProductId != "")
+                {
+                    Task<String> removeProductReturn = _stripeService.RemoveProduct(updatedProduct.StripeProductId);
+                    return Ok(new { Product = updatedProduct, Message = removeProductReturn });
+                }
+                return Ok(updatedProduct);
             } catch(Exception ex)
             {
                 return BadRequest(ex.Message);

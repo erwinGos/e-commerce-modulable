@@ -85,18 +85,5 @@ namespace Data.Services
                 throw new Exception(ex.Message);
             }
         }
-
-        public async Task<ProductRead> SaveUpDatabase(Product product)
-        {
-            try
-            {
-
-                return _mapper.Map<ProductRead>(product);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
     }
 }

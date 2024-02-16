@@ -43,6 +43,7 @@ namespace appleEarStore.WebApi
 
             //Stripe
             services.AddScoped<Stripe.ProductService>();
+            services.AddScoped<Stripe.PriceService>();
             services.AddScoped<IStripeService, StripeService>();
             return services;
         }
