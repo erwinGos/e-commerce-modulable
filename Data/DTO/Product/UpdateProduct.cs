@@ -25,6 +25,8 @@ namespace Data.DTO.ProductDto
 
         public string? Description { get; set; } = null;
 
+        public string? StripeProductId { get; set; } = null;
+
         public int? CurrentStock { get; set; } = null;
 
         public decimal? Weight { get; set; } = null;

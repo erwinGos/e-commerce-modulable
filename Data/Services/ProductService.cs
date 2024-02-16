@@ -62,8 +62,7 @@ namespace Data.Services
         {
             try
             {
-                Product checkIfExists = await _productRepository.GetById(updateProduct.Id) ?? throw new Exception("Le produit n'existe pas."); ;
-                Product updatedProduct = await _productRepository.Update(updateProduct);
+                Product updatedProduct = await _productRepository.Update(updateProduct, updateProduct.Id);
                 return _mapper.Map<ProductRead>(updatedProduct);
             } catch (Exception ex)
             {

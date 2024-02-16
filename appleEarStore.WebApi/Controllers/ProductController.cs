@@ -84,8 +84,15 @@ namespace appleEarStore.WebApi.Controllers
         [HttpPatch()]
         public async Task<IActionResult> UpdateProduct(UpdateProduct updateProduct)
         {
-            ProductRead updatedProduct = await _productService.UpdateProduct(_mapper.Map<Database.Entities.Product>(updateProduct));
-            return Ok(updatedProduct);
+            try
+            {
+                ProductRead updatedProduct = await _productService.UpdateProduct(_mapper.Map<Database.Entities.Product>(updateProduct));
+                await _stripeService.UpdateProduct(updatedProduct);
+                return Ok(updatedProduct);
+            } catch (Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
         }
 
         [Authorize]

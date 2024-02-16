@@ -32,6 +32,32 @@ namespace Data.Services
             return await _productService.CreateAsync(productCreateOptions);
         }
 
+        public async Task<Stripe.Product> UpdateProduct(ProductRead product)
+        {
+            try
+            {
+                var options = new ProductUpdateOptions();
+                if (product.Price != null)
+                {
+                    Price freshlyCreatedPrice = await _priceService.CreateAsync(new PriceCreateOptions()
+                    {
+                        Product = product.StripeProductId,
+                        Currency = "eur",
+                        UnitAmountDecimal = product.Price * 100,
+                        TaxBehavior = "inclusive"
+                    });
+                    options.DefaultPrice = freshlyCreatedPrice.Id;
+                }
+                options.Name = product.ProductName;
+                options.Description = product.Description;
+
+                return await _productService.UpdateAsync(product.StripeProductId, options);
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<string> RemoveProduct(string StripeProductId)
         {
             try

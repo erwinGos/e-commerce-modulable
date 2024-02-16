@@ -39,6 +39,8 @@ namespace Data
             CreateMap<ProductRead, Product>();
             CreateMap<Product, ProductReadOrder>();
             CreateMap<Product, CartProduct>();
+            CreateMap<Product, Product>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember == null));
             CreateMap<CreateProduct, Product>();
             CreateMap<UpdateProduct, Product>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
