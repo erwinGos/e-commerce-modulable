@@ -32,5 +32,7 @@ namespace Data.DTO.ProductDto
         public bool IsDeactivated { get; set; } = false;
 
         public DateTime LastUpdatedAt { get; set; } = DateTime.UtcNow;
+
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
