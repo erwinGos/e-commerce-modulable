@@ -1,5 +1,5 @@
 ﻿
-using Data.DTO.Product;
+using Data.DTO.ProductDto;
 
 namespace Data.DTO.Order
 {
@@ -12,5 +12,7 @@ namespace Data.DTO.Order
         public required int AddressId { get; set; }
 
         public required List<ProductOrderCreate> Products { get; set; }
+
+        public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }

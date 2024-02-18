@@ -1,14 +1,12 @@
-﻿using Database.Entities;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Data.DTO.Category
+namespace Data.DTO.ProductDto
 {
-    public class CategoryPromo
+    public class ProductPromo
     {
         public int Id { get; set; }
     }

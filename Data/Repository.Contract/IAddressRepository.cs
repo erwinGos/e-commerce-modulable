@@ -2,7 +2,7 @@
 
 namespace Data.Repository.Contract
 {
-    public interface ICategoryRepository : IGenericRepository<Category>
+    public interface IAddressRepository : IGenericRepository<Address>
     {
     }
 }

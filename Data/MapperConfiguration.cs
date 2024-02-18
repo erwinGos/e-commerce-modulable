@@ -2,7 +2,10 @@
 using Data.DTO.Cart;
 using Data.DTO.Category;
 using Data.DTO.Color;
+using Data.DTO.Order;
 using Data.DTO.Product;
+using Data.DTO.ProductDto;
+using Data.DTO.ProductOrderDto;
 using Data.DTO.Promo;
 using Data.DTO.User;
 using Database.Entities;
@@ -22,12 +25,22 @@ namespace Data
             //Category
             CreateMap<Category, CategoryRead>();
 
+            //Order
+            CreateMap<Order, OrderRead>();
+
+            //ProductOrder
+            CreateMap<ProductOrder, ProductOrderRead>();
+
             // Promo
-            CreateMap<CategoryPromo, Category>();
+            CreateMap<ProductPromo, Product>();
             CreateMap<CreatePromo, PromoCode>();
 
             // Product
+            CreateMap<ProductRead, Product>();
+            CreateMap<Product, ProductReadOrder>();
             CreateMap<Product, CartProduct>();
+            CreateMap<Product, Product>()
+                .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember == null));
             CreateMap<CreateProduct, Product>();
             CreateMap<UpdateProduct, Product>()
             .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));

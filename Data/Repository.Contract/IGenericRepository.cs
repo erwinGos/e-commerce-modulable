@@ -19,7 +19,7 @@ namespace Data.Repository.Contract
 
         public Task<T> Insert(T element);
 
-        public Task<T> Update(T element);
+        public Task<T> Update(T element, int? Id = 0);
 
         public Task<T> Delete(T element);
     }

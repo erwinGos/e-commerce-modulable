@@ -11,14 +11,14 @@ namespace Data.Services
     {
         private readonly IPromoRepository _promoRepository;
 
-        private readonly ICategoryRepository _categoryRepository;
+        private readonly IProductRepository _productRepository;
 
         private readonly IMapper _mapper;
 
-        public PromoService(IPromoRepository promoRepository,ICategoryRepository categoryRepository,IMapper mapper)
+        public PromoService(IPromoRepository promoRepository, IProductRepository productRepository, IMapper mapper)
         {
             _promoRepository = promoRepository;
-            _categoryRepository = categoryRepository;
+            _productRepository = productRepository;
             _mapper = mapper;
         }
 
@@ -52,17 +52,17 @@ namespace Data.Services
             try
             {
                 PromoCode transformedPromo = _mapper.Map<PromoCode>(createPromo);
-                var categoriesToAttach = new List<Category>();
-                foreach (var category in transformedPromo.Categories.ToList())
+                var productsToAttach = new List<Product>();
+                foreach (var product in transformedPromo.Products.ToList())
                 {
-                    var existingCategory = await _categoryRepository.GetById(category.Id);
-                    if (existingCategory != null)
+                    var existingProduct = await _productRepository.GetById(product.Id);
+                    if (existingProduct != null)
                     {
-                        categoriesToAttach.Add(existingCategory);
+                        productsToAttach.Add(existingProduct);
                     }
                 }
 
-                transformedPromo.Categories = categoriesToAttach;
+                transformedPromo.Products = productsToAttach;
                 PromoCode promo = await _promoRepository.Insert(transformedPromo);
                 return promo;
             }

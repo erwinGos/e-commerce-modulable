@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240215151046_productAddApi")]
+    partial class productAddApi
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,10 +231,6 @@ namespace Database.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("varchar(128)");
 
-                    b.Property<string>("StripePaymentUrl")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
 
@@ -293,10 +292,6 @@ namespace Database.Migrations
                         .IsRequired()
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
-
-                    b.Property<string>("StripePriceId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<string>("StripeProductId")
                         .IsRequired()
@@ -361,10 +356,6 @@ namespace Database.Migrations
 
                     b.Property<int?>("ReturnId")
                         .HasColumnType("int");
-
-                    b.Property<string>("StripePriceId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");

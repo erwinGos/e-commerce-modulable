@@ -6,7 +6,6 @@ using Data.DTO.Pagination;
 using System.Security.Claims;
 using Data.DTO.Order;
 
-
 namespace appleEarStore.WebApi.Controllers
 {
     [ApiController]
@@ -14,6 +13,7 @@ namespace appleEarStore.WebApi.Controllers
     public class OrderController : ControllerBase
     {
         private readonly IOrderService _OrderService;
+
 
         public OrderController(IOrderService orderService)
         {
@@ -78,6 +78,23 @@ namespace appleEarStore.WebApi.Controllers
                 return Ok(orders);
             }
             catch (Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpPost("create")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> CreateOrder(CreateOrder createOrder)
+        {
+            try
+            {
+                int userId = Int32.Parse(User.FindFirst("UserId").Value);
+                OrderRead order = await _OrderService.CreateOrder(createOrder, userId);
+
+                return Ok(order);
+
+            } catch (Exception ex)
             {
                 return BadRequest(new { message = ex.Message });
             }

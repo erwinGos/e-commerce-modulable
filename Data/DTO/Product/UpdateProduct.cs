@@ -7,7 +7,7 @@ using System.Text;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
 
-namespace Data.DTO.Product
+namespace Data.DTO.ProductDto
 {
     public class UpdateProduct
     {
@@ -24,6 +24,8 @@ namespace Data.DTO.Product
         public decimal? PriceWithoutTax { get; set; } = null;
 
         public string? Description { get; set; } = null;
+
+        public string? StripeProductId { get; set; } = null;
 
         public int? CurrentStock { get; set; } = null;
 

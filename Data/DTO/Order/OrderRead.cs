@@ -1,15 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-using System.Text.Json.Serialization;
+﻿
+using Data.DTO.ProductOrderDto;
+using Database.Entities;
 
-
-namespace Database.Entities
+namespace Data.DTO.Order
 {
-    public partial class Order
+    public class OrderRead
     {
         public int Id { get; set; }
 
-        [Required]
-        [StringLength(20)]
         public required string OrderNumber { get; set; }
 
         public int UserId { get; set; }
@@ -20,30 +18,16 @@ namespace Database.Entities
 
         public decimal Total { get; set; } = 0;
 
-
-        public string StripePaymentUrl { get; set; } = string.Empty;
-
-        [Required]
-        [StringLength(128)]
         public required string Street { get; set; }
 
-        [StringLength(64)]
         public required string PhoneNumber { get; set; }
 
-        [Required]
-        [StringLength(128)]
         public required string City { get; set; }
 
-        [Required]
-        [StringLength(64)]
         public required string PostalCode { get; set; }
 
-        [Required]
-        [StringLength(128)]
         public required string Country { get; set; }
 
-        [Required]
-        [StringLength(512)]
         public required string ParcelTracking { get; set; }
 
         public required decimal TotalWeight { get; set; }
@@ -56,6 +40,6 @@ namespace Database.Entities
 
         public required DateTime CreatedAt { get; set; }
 
-        public virtual ICollection<ProductOrder> ProductOrders { get; set; } = new List<ProductOrder>();
+        public virtual ICollection<ProductOrderRead> ProductOrders { get; set; } = new List<ProductOrderRead>();
     }
 }
