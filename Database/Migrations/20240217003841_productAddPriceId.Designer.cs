@@ -11,15 +11,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240212215957_promoCodeId")]
-    partial class promoCodeId
+    [Migration("20240217003841_productAddPriceId")]
+    partial class productAddPriceId
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.1")
+                .HasAnnotation("ProductVersion", "8.0.2")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("CategoryProduct", b =>
@@ -35,21 +35,6 @@ namespace Database.Migrations
                     b.HasIndex("ProductsId");
 
                     b.ToTable("CategoryProduct");
-                });
-
-            modelBuilder.Entity("CategoryPromoCode", b =>
-                {
-                    b.Property<int>("CategoriesId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("PromoCodesId")
-                        .HasColumnType("int");
-
-                    b.HasKey("CategoriesId", "PromoCodesId");
-
-                    b.HasIndex("PromoCodesId");
-
-                    b.ToTable("CategoryPromoCode");
                 });
 
             modelBuilder.Entity("ColorProduct", b =>
@@ -246,6 +231,10 @@ namespace Database.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("varchar(128)");
 
+                    b.Property<string>("StripePaymentUrl")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
 
@@ -308,6 +297,15 @@ namespace Database.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
 
+                    b.Property<string>("StripePriceId")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<string>("StripeProductId")
+                        .IsRequired()
+                        .HasMaxLength(256)
+                        .HasColumnType("varchar(256)");
+
                     b.Property<decimal>("Weight")
                         .HasColumnType("decimal(18,2)");
 
@@ -352,6 +350,9 @@ namespace Database.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<decimal>("Discount_Amount")
+                        .HasColumnType("decimal(18,2)");
+
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
@@ -394,6 +395,9 @@ namespace Database.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
+                    b.Property<int?>("CategoryId")
+                        .HasColumnType("int");
+
                     b.Property<string>("Code")
                         .IsRequired()
                         .HasMaxLength(64)
@@ -420,6 +424,8 @@ namespace Database.Migrations
                         .HasColumnType("tinyint(1)");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("CategoryId");
 
                     b.HasIndex("Code")
                         .IsUnique();
@@ -496,9 +502,6 @@ namespace Database.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
 
-                    b.Property<int?>("PromoCodeId")
-                        .HasColumnType("int");
-
                     b.Property<DateTime>("RegistrationDate")
                         .HasColumnType("datetime(6)");
 
@@ -506,8 +509,6 @@ namespace Database.Migrations
 
                     b.HasIndex("Email")
                         .IsUnique();
-
-                    b.HasIndex("PromoCodeId");
 
                     b.ToTable("User");
                 });
@@ -567,6 +568,36 @@ namespace Database.Migrations
                     b.ToTable("Vouchers");
                 });
 
+            modelBuilder.Entity("ProductPromoCode", b =>
+                {
+                    b.Property<int>("ProductsId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PromoCodesId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ProductsId", "PromoCodesId");
+
+                    b.HasIndex("PromoCodesId");
+
+                    b.ToTable("ProductPromoCode");
+                });
+
+            modelBuilder.Entity("PromoCodeUser", b =>
+                {
+                    b.Property<int>("PromoCodesId")
+                        .HasColumnType("int");
+
+                    b.Property<int>("UsersId")
+                        .HasColumnType("int");
+
+                    b.HasKey("PromoCodesId", "UsersId");
+
+                    b.HasIndex("UsersId");
+
+                    b.ToTable("PromoCodeUser");
+                });
+
             modelBuilder.Entity("CategoryProduct", b =>
                 {
                     b.HasOne("Database.Entities.Category", null)
@@ -578,21 +609,6 @@ namespace Database.Migrations
                     b.HasOne("Database.Entities.Product", null)
                         .WithMany()
                         .HasForeignKey("ProductsId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("CategoryPromoCode", b =>
-                {
-                    b.HasOne("Database.Entities.Category", null)
-                        .WithMany()
-                        .HasForeignKey("CategoriesId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("Database.Entities.PromoCode", null)
-                        .WithMany()
-                        .HasForeignKey("PromoCodesId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -664,11 +680,11 @@ namespace Database.Migrations
                     b.Navigation("Return");
                 });
 
-            modelBuilder.Entity("Database.Entities.User", b =>
+            modelBuilder.Entity("Database.Entities.PromoCode", b =>
                 {
-                    b.HasOne("Database.Entities.PromoCode", null)
-                        .WithMany("Users")
-                        .HasForeignKey("PromoCodeId");
+                    b.HasOne("Database.Entities.Category", null)
+                        .WithMany("PromoCodes")
+                        .HasForeignKey("CategoryId");
                 });
 
             modelBuilder.Entity("Database.Entities.UserCart", b =>
@@ -688,6 +704,41 @@ namespace Database.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("ProductPromoCode", b =>
+                {
+                    b.HasOne("Database.Entities.Product", null)
+                        .WithMany()
+                        .HasForeignKey("ProductsId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Database.Entities.PromoCode", null)
+                        .WithMany()
+                        .HasForeignKey("PromoCodesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("PromoCodeUser", b =>
+                {
+                    b.HasOne("Database.Entities.PromoCode", null)
+                        .WithMany()
+                        .HasForeignKey("PromoCodesId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("Database.Entities.User", null)
+                        .WithMany()
+                        .HasForeignKey("UsersId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
+            modelBuilder.Entity("Database.Entities.Category", b =>
+                {
+                    b.Navigation("PromoCodes");
+                });
+
             modelBuilder.Entity("Database.Entities.Order", b =>
                 {
                     b.Navigation("ProductOrders");
@@ -696,11 +747,6 @@ namespace Database.Migrations
             modelBuilder.Entity("Database.Entities.Product", b =>
                 {
                     b.Navigation("ProductImages");
-                });
-
-            modelBuilder.Entity("Database.Entities.PromoCode", b =>
-                {
-                    b.Navigation("Users");
                 });
 
             modelBuilder.Entity("Database.Entities.Return", b =>

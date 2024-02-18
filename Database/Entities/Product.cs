@@ -30,11 +30,18 @@ namespace Database.Entities
 
         public bool IsDeactivated { get; set; }
 
+        [StringLength(256)]
+        public string StripeProductId { get; set; } = "";
+
+        public string StripePriceId { get; set; } = "";
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime LastUpdatedAt { get; set;}
 
         public virtual Brand Brand { get; set; }
+
+        public virtual ICollection<PromoCode> PromoCodes { get; set; } = new List<PromoCode>();
 
         public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
 

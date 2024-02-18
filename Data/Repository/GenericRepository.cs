@@ -97,10 +97,17 @@ namespace Data.Repository
             }
         }
 
-        public async Task<T> Update(T element)
+        public async Task<T> Update(T element, int? Id)
         {
             try
             {
+                if(Id != 0)
+                {
+                    T checkIfExists = await _table.FindAsync(Id).ConfigureAwait(false) ?? throw new Exception("Cette entité n'existe pas.");
+                    _db.Entry(checkIfExists).State = EntityState.Detached;
+                }
+                
+
                 var elementUpdated = _table.Update(element);
                 await _db.SaveChangesAsync().ConfigureAwait(false);
 

@@ -28,8 +28,8 @@ namespace Database.Entities
 
         public DateTime ExpirationDate { get; set; }
 
-        public virtual ICollection<Category> Categories { get; set; } = new List<Category>();
+        public virtual ICollection<Product> Products { get; set; } = new List<Product>();
 
-
+        public virtual ICollection<User> Users { get; set; }
     }
 }

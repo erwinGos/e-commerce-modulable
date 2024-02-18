@@ -3,6 +3,7 @@ using System;
 using Database;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,13 +11,15 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240213120036_updatePromoCodeWithProducts")]
+    partial class updatePromoCodeWithProducts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
-                .HasAnnotation("ProductVersion", "8.0.2")
+                .HasAnnotation("ProductVersion", "8.0.1")
                 .HasAnnotation("Relational:MaxIdentifierLength", 64);
 
             modelBuilder.Entity("CategoryProduct", b =>
@@ -228,10 +231,6 @@ namespace Database.Migrations
                         .HasMaxLength(128)
                         .HasColumnType("varchar(128)");
 
-                    b.Property<string>("StripePaymentUrl")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
 
@@ -294,15 +293,6 @@ namespace Database.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
 
-                    b.Property<string>("StripePriceId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("StripeProductId")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
-
                     b.Property<decimal>("Weight")
                         .HasColumnType("decimal(18,2)");
 
@@ -347,9 +337,6 @@ namespace Database.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
-                    b.Property<decimal>("Discount_Amount")
-                        .HasColumnType("decimal(18,2)");
-
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
 
@@ -361,10 +348,6 @@ namespace Database.Migrations
 
                     b.Property<int?>("ReturnId")
                         .HasColumnType("int");
-
-                    b.Property<string>("StripePriceId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
 
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");

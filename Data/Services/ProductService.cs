@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using Data.DTO.Pagination;
-using Data.DTO.Product;
+using Data.DTO.ProductDto;
 using Data.Repository.Contract;
 using Data.Services.Contract;
 using Database.Entities;
@@ -58,13 +58,11 @@ namespace Data.Services
             }
         }
 
-        public async Task<ProductRead> UpdateProduct(UpdateProduct updateProduct)
+        public async Task<ProductRead> UpdateProduct(Product updateProduct)
         {
             try
             {
-                Product checkIfExists = await _productRepository.GetById(updateProduct.Id) ?? throw new Exception("Le produit n'existe pas."); ;
-                Product productToUpdate = _mapper.Map(updateProduct, checkIfExists);
-                Product updatedProduct = await _productRepository.Update(productToUpdate);
+                Product updatedProduct = await _productRepository.Update(updateProduct, updateProduct.Id);
                 return _mapper.Map<ProductRead>(updatedProduct);
             } catch (Exception ex)
             {
