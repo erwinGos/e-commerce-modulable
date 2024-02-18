@@ -33,6 +33,8 @@ namespace Database.Entities
         [StringLength(256)]
         public string StripeProductId { get; set; } = "";
 
+        public string StripePriceId { get; set; } = "";
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime LastUpdatedAt { get; set;}

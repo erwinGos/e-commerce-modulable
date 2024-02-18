@@ -44,6 +44,8 @@ namespace appleEarStore.WebApi
             //Stripe
             services.AddScoped<Stripe.ProductService>();
             services.AddScoped<Stripe.PriceService>();
+            services.AddScoped<Stripe.Checkout.SessionService>();
+            services.AddScoped<Stripe.CustomerService>();
             services.AddScoped<IStripeService, StripeService>();
             return services;
         }

@@ -53,7 +53,7 @@ namespace Data.Managers
                 }
 
                 //Verifie si le code est déjà utilisé
-                List<PromoCode> checkIfAlreadyUsedPromoCodes = user.PromoCodes.Where(promo => createOrder.PromoCode.Any(plannedToBeUsedPromo => plannedToBeUsedPromo == promo.Code)).ToList();
+                List<PromoCode> checkIfAlreadyUsedPromoCodes = user.PromoCodes.Where(promo => createOrder.PromoCode.Any(plannedToBeUsedPromo => plannedToBeUsedPromo == promo.Code) && promo.SingleTimeUsage == true).ToList();
                 if (checkIfAlreadyUsedPromoCodes.Count > 0)
                 {
                     throw new Exception("Vous avez déjà utilisé le(s) code(s) promotionnel(s) suivant(s) : " + string.Join(", ", checkIfAlreadyUsedPromoCodes.Select(promo => promo.Code)));

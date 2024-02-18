@@ -1,6 +1,10 @@
 ﻿using Data.DTO.ProductDto;
 using Data.Services.Contract;
+using Database.Entities;
+using Microsoft.Extensions.Configuration;
 using Stripe;
+using Stripe.Climate;
+using Stripe.TestHelpers;
 
 namespace Data.Services
 {
@@ -8,78 +12,53 @@ namespace Data.Services
     {
         private readonly Stripe.ProductService _productService;
         private readonly Stripe.PriceService _priceService;
+        private readonly Stripe.Checkout.SessionService _sessionService;
+        private readonly Stripe.CustomerService _customerService;
+        private readonly IConfiguration _configuration;
 
-        public StripeService(Stripe.ProductService productService, Stripe.PriceService priceService)
+        public StripeService(IConfiguration configuration, Stripe.Checkout.SessionService sessionService, Stripe.ProductService productService, Stripe.PriceService priceService, Stripe.CustomerService customerService)
         {
             _productService = productService;
             _priceService = priceService;
+            _sessionService = sessionService;
+            _customerService = customerService;
+            _configuration = configuration;
         }
 
-        public async Task<Stripe.Product> CreateProduct(CreateProduct product)
+        public async Task<string> CreatePaymentLink(Database.Entities.Order order, User user)
         {
-            var productCreateOptions = new ProductCreateOptions
+            try
             {
-                Name = product.ProductName,
-                Description = product.Description,
-                DefaultPriceData = new ProductDefaultPriceDataOptions
+                Price freshlyCreatedPrice = _priceService.Create(new PriceCreateOptions()
                 {
-                    UnitAmountDecimal = product.Price * 100,
+                    ProductData = new PriceProductDataOptions
+                    {
+                        Name = "order_" + order.OrderNumber + "_" + order.UserId,
+                    },
                     Currency = "eur",
+                    UnitAmountDecimal = order.Total * 100,
                     TaxBehavior = "inclusive"
+                });
+
+                var options = new Stripe.Checkout.SessionCreateOptions
+                {
+                    SuccessUrl = _configuration["Urls:frontEndUrl"],
+                    LineItems = new List<Stripe.Checkout.SessionLineItemOptions>
+                {
+                    new Stripe.Checkout.SessionLineItemOptions
+                    {
+                        Price = freshlyCreatedPrice.Id,
+                        Quantity = 1,
+                    },
                 },
-                TaxCode = "txcd_99999999"
-            };
-            return await _productService.CreateAsync(productCreateOptions);
-        }
+                    CustomerEmail = user.Email,
+                    Metadata = new Dictionary<string, string> { { "OrderNumber", order.OrderNumber } },
+                    Mode = "payment",
+                    ExpiresAt = DateTime.UtcNow.AddMinutes(30),
+                };
 
-        public async Task<Stripe.Product> UpdateProduct(ProductRead product)
-        {
-            try
-            {
-                var options = new ProductUpdateOptions();
-                if (product.Price != null)
-                {
-                    Price freshlyCreatedPrice = await _priceService.CreateAsync(new PriceCreateOptions()
-                    {
-                        Product = product.StripeProductId,
-                        Currency = "eur",
-                        UnitAmountDecimal = product.Price * 100,
-                        TaxBehavior = "inclusive"
-                    });
-                    options.DefaultPrice = freshlyCreatedPrice.Id;
-                }
-                options.Name = product.ProductName;
-                options.Description = product.Description;
-
-                return await _productService.UpdateAsync(product.StripeProductId, options);
-            } catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
-        }
-
-        public async Task<string> RemoveProduct(string StripeProductId)
-        {
-            try
-            {
-                try
-                {
-                    StripeList<Price> prices = _priceService.List(new PriceListOptions { Product = StripeProductId });
-
-
-                    await _productService.DeleteAsync(StripeProductId);
-                    return "Produit supprimé.";
-                } catch(StripeException ex)
-                {
-                    try
-                    {
-                        await _productService.UpdateAsync(StripeProductId, new ProductUpdateOptions { Active = false });
-                        return "Produit archivé.";
-                    } catch(StripeException ex2)
-                    {
-                        throw new Exception("Une erreur s'est produite.");
-                    }
-                }
+                var service = await _sessionService.CreateAsync(options);
+                return service.Url;
 
             } catch (Exception ex)
             {

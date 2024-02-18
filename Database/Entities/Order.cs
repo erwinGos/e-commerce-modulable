@@ -20,6 +20,9 @@ namespace Database.Entities
 
         public decimal Total { get; set; } = 0;
 
+
+        public string StripePaymentUrl { get; set; } = string.Empty;
+
         [Required]
         [StringLength(128)]
         public required string Street { get; set; }

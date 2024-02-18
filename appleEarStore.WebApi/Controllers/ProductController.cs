@@ -15,12 +15,10 @@ namespace appleEarStore.WebApi.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
-        private readonly IStripeService _stripeService;
         private readonly IMapper _mapper;
 
         public ProductController(IMapper mapper, IProductService productService, IStripeService stripeService)
         {
-            _stripeService = stripeService;
             _productService = productService;
             _mapper = mapper;
         }
@@ -62,20 +60,11 @@ namespace appleEarStore.WebApi.Controllers
 
             try
             {
-                stripeProduct = await _stripeService.CreateProduct(createProduct);
-                createProduct.StripeProductId = stripeProduct.Id;
                 ProductRead createdProduct = await _productService.CreateProduct(createProduct);
-
-                
-
                 return Ok(createdProduct);
             }
             catch (Exception ex)
             {
-                if (stripeProduct != null)
-                {
-                    await _stripeService.RemoveProduct(stripeProduct.Id);
-                }
                 return BadRequest(new { ex.Message });
             }
         }
@@ -87,7 +76,6 @@ namespace appleEarStore.WebApi.Controllers
             try
             {
                 ProductRead updatedProduct = await _productService.UpdateProduct(_mapper.Map<Database.Entities.Product>(updateProduct));
-                await _stripeService.UpdateProduct(updatedProduct);
                 return Ok(updatedProduct);
             } catch (Exception ex)
             {
@@ -102,11 +90,6 @@ namespace appleEarStore.WebApi.Controllers
             try
             {
                 ProductRead updatedProduct = await _productService.DeactivateProduct(productId);
-                if(updatedProduct.StripeProductId != "")
-                {
-                    Task<String> removeProductReturn = _stripeService.RemoveProduct(updatedProduct.StripeProductId);
-                    return Ok(new { Product = updatedProduct, Message = removeProductReturn });
-                }
                 return Ok(updatedProduct);
             } catch(Exception ex)
             {

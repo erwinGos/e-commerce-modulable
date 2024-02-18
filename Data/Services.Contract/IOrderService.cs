@@ -13,5 +13,9 @@ namespace Data.Services.Contract
         public Task<List<Order>> GetAllUsersOrders(PaginationParameters parameters);
 
         public Task<OrderRead> CreateOrder(CreateOrder createOrder, int userId);
+
+        public Task<Order> PaidOrder(string orderNumber);
+
+        public Task<Order> RemoveExpiredOrder(string orderNumber);
     }
 }

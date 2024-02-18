@@ -22,8 +22,9 @@ namespace Data.Services
         private readonly IAddressRepository _addressRepository;
         private readonly IMapper _mapper;
         private readonly OrderManager _orderManager;
+        private readonly IStripeService _stripeService;
 
-        public OrderService(OrderManager orderManager, IMapper mapper, IOrderRepository orderRepository, IUserRepository userRepository, IProductRepository productRepository, IPromoRepository promoRepository, IProductOrderRepository productOrderRepository, IAddressRepository addressRepository)
+        public OrderService(IStripeService stripeService, OrderManager orderManager, IMapper mapper, IOrderRepository orderRepository, IUserRepository userRepository, IProductRepository productRepository, IPromoRepository promoRepository, IProductOrderRepository productOrderRepository, IAddressRepository addressRepository)
         {
             _orderRepository = orderRepository;
             _userRepository = userRepository;
@@ -33,6 +34,7 @@ namespace Data.Services
             _addressRepository = addressRepository;
             _mapper = mapper;
             _orderManager = orderManager;
+            _stripeService = stripeService;
         }
 
         public async Task<Order> GetSingleOrder(int orderId, int userId, PaginationParameters parameters)
@@ -99,7 +101,8 @@ namespace Data.Services
                         ProductId = poc.ProductId,
                         Quantity = poc.Quantity,
                         CreatedAt = DateTime.UtcNow,
-                        UpdatedAt = DateTime.UtcNow
+                        UpdatedAt = DateTime.UtcNow,
+                        StripePriceId = product.StripePriceId
                     };
                     if (product != null)
                     {
@@ -155,6 +158,7 @@ namespace Data.Services
                     throw new Exception("L'utilisation du solde ne peut pas être supérieure au montant de la commande.");
                 }
                 user.Balance -= createOrder.UsedBalance;
+                var orderNumber = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString();
                 Order orderToCreate = new()
                 {
                     UserId = userId,
@@ -162,7 +166,7 @@ namespace Data.Services
                     Discount_amount = Discount_amount,
                     Total = (total - createOrder.UsedBalance),
                     TotalWeight = totalWeight,
-                    OrderNumber = DateTimeOffset.Now.ToUnixTimeMilliseconds().ToString(),
+                    OrderNumber = orderNumber,
                     Street = address.Street,
                     PhoneNumber = address.PhoneNumber,
                     City = address.City,
@@ -173,18 +177,43 @@ namespace Data.Services
                     DeliveryDate = DateTime.Now, // Implementation transporteur.
                     CreatedAt = DateTime.Now
                 };
-
+                string StripePaymentUrl = await _stripeService.CreatePaymentLink(orderToCreate, user);
+                orderToCreate.StripePaymentUrl = StripePaymentUrl;
                 Order createdOrder = await _orderRepository.Insert(orderToCreate);
                 foreach(ProductOrder productOrder in productOrderList)
                 {
                     productOrder.OrderId = createdOrder.Id;
                     await _productOrderRepository.Insert(productOrder);
                 }
+
                 User updateUser = await _userRepository.Update(user);
 
                 return _mapper.Map<OrderRead>(createdOrder);
 
             } catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<Order> PaidOrder(string orderNumber)
+        {
+            try
+            {
+                return await _orderRepository.ChangeToPaidOrder(orderNumber);
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<Order> RemoveExpiredOrder(string orderNumber)
+        {
+            try
+            {
+                return await _orderRepository.RemoveExpiredOrder(orderNumber);
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }
