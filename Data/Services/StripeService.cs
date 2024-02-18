@@ -53,8 +53,7 @@ namespace Data.Services
                 },
                     CustomerEmail = user.Email,
                     Metadata = new Dictionary<string, string> { { "OrderNumber", order.OrderNumber } },
-                    Mode = "payment",
-                    ExpiresAt = DateTime.UtcNow.AddMinutes(30),
+                    Mode = "payment"
                 };
 
                 var service = await _sessionService.CreateAsync(options);

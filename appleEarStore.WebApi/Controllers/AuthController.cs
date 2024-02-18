@@ -26,10 +26,10 @@ namespace appleEarStore.WebApi.Controllers
 
 
         [Authorize]
-        [HttpPost("checkAuth")]
+        [HttpGet("checkAuth")]
         public async Task<IActionResult> CheckAuth()
         {
-            return Ok();
+            return Ok(true);
         }
 
         [HttpPost("signup")]

@@ -96,6 +96,10 @@ namespace Data.Services
                 foreach (ProductOrderCreate poc in createOrder.Products)
                 {
                     Product product = await _productRepository.FindSingleBy(product => product.Id == poc.ProductId, product => product.PromoCodes);
+                    if(poc.Quantity > product.CurrentStock)
+                    {
+                        throw new Exception("Un ou plusieurs produits ne sont plus en stock dans les quantités indiquées, veuillez verifier votre panier.");
+                    }
                     ProductOrder productOrder = new ProductOrder()
                     {
                         ProductId = poc.ProductId,
@@ -112,8 +116,13 @@ namespace Data.Services
                         totalWithoutTax += totalWithoutTaxPo;
                         productOrder.TotalWithoutTax = totalWithoutTaxPo;
 
+
+                        Product copyProduct = product;
+                        copyProduct.CurrentStock -= poc.Quantity;
+                        await _productRepository.Update(copyProduct);
+
                         // With Tax
-                        if(product.PromoCodes.Count > 0)
+                        if (product.PromoCodes.Count > 0)
                         {
                             var highestDiscountPromoCode = product.PromoCodes
                             .OrderByDescending(promo => promo.DiscountPercentage)

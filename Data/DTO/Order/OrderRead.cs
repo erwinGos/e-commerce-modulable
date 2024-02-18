@@ -30,6 +30,8 @@ namespace Data.DTO.Order
 
         public required string ParcelTracking { get; set; }
 
+        public string StripePaymentUrl { get; set; }
+
         public required decimal TotalWeight { get; set; }
 
         public DateTime EstimatedDeliveryDate { get; set; }
