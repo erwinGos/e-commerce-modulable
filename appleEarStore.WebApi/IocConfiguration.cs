@@ -35,6 +35,7 @@ namespace appleEarStore.WebApi
             services.AddScoped<IProductService, Data.Services.ProductService>();
             services.AddScoped<IOrderService, OrderService>();  
             services.AddScoped<IPromoService, PromoService>();
+            services.AddScoped<IAddressService, AddressService>();
 
 
             //Order Manager

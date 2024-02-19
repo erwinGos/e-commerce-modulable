@@ -28,7 +28,7 @@ namespace Data.Repository
                 var result = await _table
                     .Include(usercart => usercart.Product)
                     .ThenInclude(product => product.ProductImages).Take(1)
-                    .FirstOrDefaultAsync(usercart => usercart.Id == elementUpdated.Entity.Id); // Assurez-vous que UserCart a un Id ou utilisez la clé appropriée
+                    .FirstOrDefaultAsync(usercart => usercart.Id == elementUpdated.Entity.Id);
 
                 if (result == null)
                 {
@@ -39,7 +39,6 @@ namespace Data.Repository
             }
             catch (Exception ex)
             {
-                // Il est généralement une bonne idée de logger l'exception ici
                 throw new Exception($"Une erreur est survenue lors de la mise à jour: {ex.Message}", ex);
             }
         }
