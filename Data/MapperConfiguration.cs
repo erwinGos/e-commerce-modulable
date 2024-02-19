@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using Data.DTO.Address;
 using Data.DTO.Cart;
 using Data.DTO.Category;
 using Data.DTO.Color;
@@ -16,6 +17,10 @@ namespace Data
     {
         public MapperConfiguration()
         {
+            // Address
+            CreateMap<AddressCreate, Address>();
+            CreateMap<AddressUpdate, Address>();
+
             // Users
             CreateMap<SignUpUser, User>();
 
