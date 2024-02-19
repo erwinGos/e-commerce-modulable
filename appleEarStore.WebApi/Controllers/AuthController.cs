@@ -15,18 +15,21 @@ namespace appleEarStore.WebApi.Controllers
     {
         private readonly IAuthenticationService _AuthenticationService;
 
-        public AuthController(IAuthenticationService authService)
+        private readonly IConfiguration _configuration;
+
+        public AuthController(IAuthenticationService authService, IConfiguration configuration)
         {
             _AuthenticationService = authService;
+            _configuration = configuration;
         }
 
 
 
         [Authorize]
-        [HttpPost("checkAuth")]
+        [HttpGet("checkAuth")]
         public async Task<IActionResult> CheckAuth()
         {
-            return Ok();
+            return Ok(true);
         }
 
         [HttpPost("signup")]
@@ -34,7 +37,11 @@ namespace appleEarStore.WebApi.Controllers
         {
             User user = await _AuthenticationService.SignUp(signUpUser);
             string BearerToken = _AuthenticationService.GenerateToken(user);
-            Response.Headers.Add("Set-Cookie", "auth_token=Bearer " + BearerToken + "; Path=/; HttpOnly; Secure");
+
+            DateTime time = DateTime.UtcNow.AddHours(Convert.ToDouble(_configuration["Jwt:ExpiresInHours"]));
+            string timeToString = time.ToString("R", CultureInfo.InvariantCulture);
+
+            Response.Headers.Add("Set-Cookie", "auth_token=Bearer " + BearerToken + "; Path=/; Secure; Expires=" + timeToString);
             return Ok(user);
         }
 
@@ -45,7 +52,11 @@ namespace appleEarStore.WebApi.Controllers
             {
                 User user = await _AuthenticationService.SignIn(signInUser);
                 string BearerToken = _AuthenticationService.GenerateToken(user);
-                Response.Headers.Add("Set-Cookie", "auth_token=Bearer " + BearerToken + "; Path=/; HttpOnly; Secure");
+
+                DateTime time = DateTime.UtcNow.AddHours(Convert.ToDouble(_configuration["Jwt:ExpiresInHours"]));
+                string timeToString = time.ToString("R", CultureInfo.InvariantCulture);
+
+                Response.Headers.Add("Set-Cookie", "auth_token=Bearer " + BearerToken + "; Path=/; Secure; Expires=" + timeToString);
                 return Ok(user);
             } catch (Exception ex)
             {
@@ -59,7 +70,7 @@ namespace appleEarStore.WebApi.Controllers
         {
             DateTime time = DateTime.UtcNow.AddMicroseconds(1000);
             string timeToString = time.ToString("R", CultureInfo.InvariantCulture);
-            Response.Headers.Add("Set-Cookie", "auth_token=Bearer ; Path=/; HttpOnly; Secure;Expires=" + timeToString);
+            Response.Headers.Add("Set-Cookie", "auth_token=Bearer ; Path=/; Secure;Expires=" + timeToString);
             return Ok();
         }
     }

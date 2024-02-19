@@ -84,7 +84,7 @@ namespace Data.Repository
         {
             try
             {
-                Order order = await this.FindSingleBy(order => order.OrderNumber == OrderNumber) ?? throw new Exception("La commande n'existe pas.");
+                Order order = await this.FindSingleBy(order => order.OrderNumber == OrderNumber, order => order.ProductOrders) ?? throw new Exception("La commande n'existe pas.");
                 _db.Entry(order).State = EntityState.Detached;
                 
                 foreach(ProductOrder itemOrder in order.ProductOrders)

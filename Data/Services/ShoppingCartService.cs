@@ -51,7 +51,10 @@ namespace Data.Services
                     newUserCartItem.UserId = userId;
 
                     UserCart freshlyCreatedUserCartItem = await _shoppingCartRepository.Insert(newUserCartItem).ConfigureAwait(false);
-                    return _mapper.Map<CartRead>(freshlyCreatedUserCartItem);
+                    UserCart freshlyCreatedUserCartItemWithImage = await _shoppingCartRepository.FindSingleBy(usercart => usercart.Id == freshlyCreatedUserCartItem.Id, 
+                        usercart => usercart.Product.ProductImages.Take(1)
+                        );
+                    return _mapper.Map<CartRead>(freshlyCreatedUserCartItemWithImage);
                 } else
                 {
                     existingUserCartItem.Quantity = addToCart.Quantity;

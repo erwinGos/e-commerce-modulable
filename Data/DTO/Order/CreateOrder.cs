@@ -13,6 +13,6 @@ namespace Data.DTO.Order
 
         public required List<ProductOrderCreate> Products { get; set; }
 
-        public required DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     }
 }
