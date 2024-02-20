@@ -353,10 +353,6 @@ namespace Database.Migrations
                     b.Property<int?>("ReturnId")
                         .HasColumnType("int");
 
-                    b.Property<string>("StripePriceId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<decimal>("Total")
                         .HasColumnType("decimal(18,2)");
 

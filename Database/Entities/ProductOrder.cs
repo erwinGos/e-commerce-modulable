@@ -21,8 +21,6 @@ namespace Database.Entities
 
         public decimal Total { get; set;}
 
-        public string StripePriceId {  get; set; }
-
         public string UsedPromoCode { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; }

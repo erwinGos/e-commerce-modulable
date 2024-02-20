@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace Database.Migrations
 {
     /// <inheritdoc />
-    public partial class FirstMigration : Migration
+    public partial class firstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -316,7 +316,6 @@ namespace Database.Migrations
                     Discount_Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TotalWithoutTax = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Total = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    StripePriceId = table.Column<string>(type: "longtext", nullable: false),
                     UsedPromoCode = table.Column<string>(type: "longtext", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),

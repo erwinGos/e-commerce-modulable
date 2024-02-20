@@ -84,6 +84,7 @@ namespace appleEarStore.WebApi.Controllers
         }
 
         [HttpPost("create")]
+        [Authorize]
         public async Task<IActionResult> CreateOrder(CreateOrder createOrder)
         {
             try
