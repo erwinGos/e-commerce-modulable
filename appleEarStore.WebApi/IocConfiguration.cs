@@ -5,7 +5,6 @@ using Data.Services;
 using Data.Services.Contract;
 using Microsoft.EntityFrameworkCore;
 using Data.Managers;
-using Stripe;
 
 namespace appleEarStore.WebApi
 {
@@ -22,6 +21,7 @@ namespace appleEarStore.WebApi
             services.AddScoped<ICategoryRepository, CategoryRepository>();
             services.AddScoped<IProductOrderRepository, ProductOrderRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
+            services.AddScoped<IBrandRepository, BrandRepository>();
 
             return services;
         }
@@ -36,6 +36,7 @@ namespace appleEarStore.WebApi
             services.AddScoped<IOrderService, OrderService>();  
             services.AddScoped<IPromoService, PromoService>();
             services.AddScoped<IAddressService, AddressService>();
+            services.AddScoped<IBrandService, BrandService>();
 
 
             //Order Manager

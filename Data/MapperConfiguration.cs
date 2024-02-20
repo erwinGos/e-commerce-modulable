@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Data.DTO.Address;
+using Data.DTO.Brands;
 using Data.DTO.Cart;
 using Data.DTO.Category;
 using Data.DTO.Color;
@@ -20,6 +21,9 @@ namespace Data
             // Address
             CreateMap<AddressCreate, Address>();
             CreateMap<AddressUpdate, Address>();
+
+            // Brand
+            CreateMap<BrandCreate, Brand>();
 
             // Users
             CreateMap<SignUpUser, User>();
