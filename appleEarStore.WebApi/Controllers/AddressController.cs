@@ -40,7 +40,7 @@ namespace appleEarStore.WebApi.Controllers
         }
 
         [Authorize]
-        [HttpGet("{id}")]
+        [HttpGet("single/{id}")]
         public async Task<IActionResult> GetSingleAddress(int id)
         {
             try
