@@ -29,7 +29,7 @@ namespace appleEarStore.WebApi.Controllers
                 return Ok(userCart);
             } catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { ex.Message });
             }
         }
 
@@ -44,7 +44,7 @@ namespace appleEarStore.WebApi.Controllers
                 return Ok(freshCartProduct);
             } catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { ex.Message });
             }
         }
 
@@ -60,7 +60,7 @@ namespace appleEarStore.WebApi.Controllers
             }
             catch (Exception ex)
             {
-                return BadRequest(ex.Message);
+                return BadRequest(new { ex.Message });
             }
         }
     }

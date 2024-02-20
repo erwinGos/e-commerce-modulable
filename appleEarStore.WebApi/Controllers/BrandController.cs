@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Data.Services.Contract;
 using Data.DTO.Brands;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace appleEarStore.WebApi.Controllers
@@ -45,6 +46,7 @@ namespace appleEarStore.WebApi.Controllers
         }
 
         [HttpPost("")]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> CreateBrand(Brand brandCreate)
         {
             try
