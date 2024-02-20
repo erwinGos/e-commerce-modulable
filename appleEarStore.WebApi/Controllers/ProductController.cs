@@ -52,7 +52,7 @@ namespace appleEarStore.WebApi.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPost("create")]
         public async Task<IActionResult> CreateProduct(CreateProduct createProduct)
         {
@@ -69,7 +69,7 @@ namespace appleEarStore.WebApi.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpPatch()]
         public async Task<IActionResult> UpdateProduct(UpdateProduct updateProduct)
         {
@@ -83,7 +83,7 @@ namespace appleEarStore.WebApi.Controllers
             }
         }
 
-        [Authorize]
+        [Authorize(Roles = "Admin")]
         [HttpDelete()]
         public async Task<IActionResult> DeleteProduct(int productId)
         {
