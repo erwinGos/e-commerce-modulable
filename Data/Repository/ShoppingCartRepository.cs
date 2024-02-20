@@ -27,7 +27,7 @@ namespace Data.Repository
                 // Recharger l'entité mise à jour depuis la base de données avec les inclusions souhaitées
                 var result = await _table
                     .Include(usercart => usercart.Product)
-                    .ThenInclude(product => product.ProductImages).Take(1)
+                    .ThenInclude(product => product.ProductImages.Take(1))
                     .FirstOrDefaultAsync(usercart => usercart.Id == elementUpdated.Entity.Id);
 
                 if (result == null)
