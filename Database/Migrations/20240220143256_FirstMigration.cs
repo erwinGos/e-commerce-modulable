@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace Database.Migrations
 {
     /// <inheritdoc />
-    public partial class initialCreate : Migration
+    public partial class FirstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -72,12 +72,14 @@ namespace Database.Migrations
                     Discount_amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Total_without_tax = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Total = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    StripePaymentUrl = table.Column<string>(type: "longtext", nullable: false),
                     Street = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false),
                     PhoneNumber = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false),
                     City = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false),
                     PostalCode = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false),
                     Country = table.Column<string>(type: "varchar(128)", maxLength: 128, nullable: false),
                     ParcelTracking = table.Column<string>(type: "varchar(512)", maxLength: 512, nullable: false),
+                    TotalWeight = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     EstimatedDeliveryDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     DeliveryDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     HasBeenPaid = table.Column<bool>(type: "tinyint(1)", nullable: false),
@@ -86,25 +88,6 @@ namespace Database.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_Order", x => x.Id);
-                })
-                .Annotation("MySQL:Charset", "utf8mb4");
-
-            migrationBuilder.CreateTable(
-                name: "PromoCode",
-                columns: table => new
-                {
-                    Id = table.Column<int>(type: "int", nullable: false)
-                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
-                    Code = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false),
-                    HomeVisible = table.Column<bool>(type: "tinyint(1)", nullable: false),
-                    Message = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false),
-                    DiscountPercentage = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
-                    ExpirationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false)
-                },
-                constraints: table =>
-                {
-                    table.PrimaryKey("PK_PromoCode", x => x.Id);
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -198,27 +181,28 @@ namespace Database.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
-                name: "CategoryPromoCode",
+                name: "PromoCode",
                 columns: table => new
                 {
-                    CategoriesId = table.Column<int>(type: "int", nullable: false),
-                    PromoCodesId = table.Column<int>(type: "int", nullable: false)
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Code = table.Column<string>(type: "varchar(64)", maxLength: 64, nullable: false),
+                    HomeVisible = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Message = table.Column<string>(type: "varchar(256)", maxLength: 256, nullable: false),
+                    DiscountPercentage = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    SingleTimeUsage = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    ExpirationDate = table.Column<DateTime>(type: "datetime(6)", nullable: false),
+                    CategoryId = table.Column<int>(type: "int", nullable: true)
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_CategoryPromoCode", x => new { x.CategoriesId, x.PromoCodesId });
+                    table.PrimaryKey("PK_PromoCode", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_CategoryPromoCode_Categories_CategoriesId",
-                        column: x => x.CategoriesId,
+                        name: "FK_PromoCode_Categories_CategoryId",
+                        column: x => x.CategoryId,
                         principalTable: "Categories",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
-                    table.ForeignKey(
-                        name: "FK_CategoryPromoCode_PromoCode_PromoCodesId",
-                        column: x => x.PromoCodesId,
-                        principalTable: "PromoCode",
-                        principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        principalColumn: "Id");
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
@@ -329,8 +313,11 @@ namespace Database.Migrations
                     OrderId = table.Column<int>(type: "int", nullable: false),
                     ProductId = table.Column<int>(type: "int", nullable: false),
                     Quantity = table.Column<int>(type: "int", nullable: false),
+                    Discount_Amount = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     TotalWithoutTax = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
                     Total = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    StripePriceId = table.Column<string>(type: "longtext", nullable: false),
+                    UsedPromoCode = table.Column<string>(type: "longtext", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     ReturnId = table.Column<int>(type: "int", nullable: true)
@@ -386,6 +373,56 @@ namespace Database.Migrations
                 })
                 .Annotation("MySQL:Charset", "utf8mb4");
 
+            migrationBuilder.CreateTable(
+                name: "ProductPromoCode",
+                columns: table => new
+                {
+                    ProductsId = table.Column<int>(type: "int", nullable: false),
+                    PromoCodesId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ProductPromoCode", x => new { x.ProductsId, x.PromoCodesId });
+                    table.ForeignKey(
+                        name: "FK_ProductPromoCode_Products_ProductsId",
+                        column: x => x.ProductsId,
+                        principalTable: "Products",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_ProductPromoCode_PromoCode_PromoCodesId",
+                        column: x => x.PromoCodesId,
+                        principalTable: "PromoCode",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
+                name: "PromoCodeUser",
+                columns: table => new
+                {
+                    PromoCodesId = table.Column<int>(type: "int", nullable: false),
+                    UsersId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_PromoCodeUser", x => new { x.PromoCodesId, x.UsersId });
+                    table.ForeignKey(
+                        name: "FK_PromoCodeUser_PromoCode_PromoCodesId",
+                        column: x => x.PromoCodesId,
+                        principalTable: "PromoCode",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                    table.ForeignKey(
+                        name: "FK_PromoCodeUser_User_UsersId",
+                        column: x => x.UsersId,
+                        principalTable: "User",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
             migrationBuilder.CreateIndex(
                 name: "IX_Addresses_UserId",
                 table: "Addresses",
@@ -407,11 +444,6 @@ namespace Database.Migrations
                 name: "IX_CategoryProduct_ProductsId",
                 table: "CategoryProduct",
                 column: "ProductsId");
-
-            migrationBuilder.CreateIndex(
-                name: "IX_CategoryPromoCode_PromoCodesId",
-                table: "CategoryPromoCode",
-                column: "PromoCodesId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_ColorProduct_ProductsId",
@@ -457,6 +489,11 @@ namespace Database.Migrations
                 column: "ReturnId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_ProductPromoCode_PromoCodesId",
+                table: "ProductPromoCode",
+                column: "PromoCodesId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Products_BrandId",
                 table: "Products",
                 column: "BrandId");
@@ -474,10 +511,20 @@ namespace Database.Migrations
                 unique: true);
 
             migrationBuilder.CreateIndex(
+                name: "IX_PromoCode_CategoryId",
+                table: "PromoCode",
+                column: "CategoryId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_PromoCode_Code",
                 table: "PromoCode",
                 column: "Code",
                 unique: true);
+
+            migrationBuilder.CreateIndex(
+                name: "IX_PromoCodeUser_UsersId",
+                table: "PromoCodeUser",
+                column: "UsersId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_User_Email",
@@ -512,9 +559,6 @@ namespace Database.Migrations
                 name: "CategoryProduct");
 
             migrationBuilder.DropTable(
-                name: "CategoryPromoCode");
-
-            migrationBuilder.DropTable(
                 name: "ColorProduct");
 
             migrationBuilder.DropTable(
@@ -524,16 +568,16 @@ namespace Database.Migrations
                 name: "ProductOrder");
 
             migrationBuilder.DropTable(
+                name: "ProductPromoCode");
+
+            migrationBuilder.DropTable(
+                name: "PromoCodeUser");
+
+            migrationBuilder.DropTable(
                 name: "UserCart");
 
             migrationBuilder.DropTable(
                 name: "Vouchers");
-
-            migrationBuilder.DropTable(
-                name: "Categories");
-
-            migrationBuilder.DropTable(
-                name: "PromoCode");
 
             migrationBuilder.DropTable(
                 name: "Colors");
@@ -545,10 +589,16 @@ namespace Database.Migrations
                 name: "Return");
 
             migrationBuilder.DropTable(
+                name: "PromoCode");
+
+            migrationBuilder.DropTable(
                 name: "Products");
 
             migrationBuilder.DropTable(
                 name: "User");
+
+            migrationBuilder.DropTable(
+                name: "Categories");
 
             migrationBuilder.DropTable(
                 name: "Brand");

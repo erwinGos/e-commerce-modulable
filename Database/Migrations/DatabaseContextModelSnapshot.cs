@@ -294,15 +294,6 @@ namespace Database.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
 
-                    b.Property<string>("StripePriceId")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<string>("StripeProductId")
-                        .IsRequired()
-                        .HasMaxLength(256)
-                        .HasColumnType("varchar(256)");
-
                     b.Property<decimal>("Weight")
                         .HasColumnType("decimal(18,2)");
 

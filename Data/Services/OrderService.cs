@@ -105,8 +105,7 @@ namespace Data.Services
                         ProductId = poc.ProductId,
                         Quantity = poc.Quantity,
                         CreatedAt = DateTime.UtcNow,
-                        UpdatedAt = DateTime.UtcNow,
-                        StripePriceId = product.StripePriceId
+                        UpdatedAt = DateTime.UtcNow
                     };
                     if (product != null)
                     {
