@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240222141632_createdAtRemoveFromBrand")]
-    partial class createdAtRemoveFromBrand
+    [Migration("20240222151512_FirstMigration")]
+    partial class FirstMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -300,6 +300,9 @@ namespace Database.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
 
+                    b.Property<decimal>("Reduction")
+                        .HasColumnType("decimal(8, 5)");
+
                     b.Property<decimal>("Weight")
                         .HasColumnType("decimal(8, 5)");
 
@@ -355,6 +358,9 @@ namespace Database.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Reduction")
+                        .HasColumnType("decimal(8, 5)");
 
                     b.Property<int?>("ReturnId")
                         .HasColumnType("int");

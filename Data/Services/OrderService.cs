@@ -129,12 +129,13 @@ namespace Data.Services
                                 decimal TotalPoWithoutDiscount = product.Price * poc.Quantity;
                                 decimal ProductPriceAfterDiscount = product.Price * (1 - highestDiscountPromoCode.DiscountPercentage);
                                 decimal TotalPo = ProductPriceAfterDiscount * poc.Quantity;
-                                total += TotalPo;
+                                total += (TotalPo - product.Reduction);
                                 Discount_amount += TotalPoWithoutDiscount - TotalPo;
-                                productOrder.Total = TotalPo;
+                                productOrder.Total = TotalPo - product.Reduction;
+                                productOrder.Reduction = product.Reduction;
                                 productOrder.UsedPromoCode = highestDiscountPromoCode.Code;
                                 productOrder.Discount_Amount = TotalPoWithoutDiscount - TotalPo;
-                                // Ajout du promocode utilisé a la liste afin de le rendre inutilisable la prochaine fois.
+                                // Ajout du promocode utilisé à la liste afin de le rendre inutilisable la prochaine fois.
                                 if(highestDiscountPromoCode.SingleTimeUsage)
                                 {
                                     user.PromoCodes.Add(highestDiscountPromoCode);
@@ -142,13 +143,13 @@ namespace Data.Services
                             } else
                             {
                                 decimal TotalPo = product.Price * poc.Quantity;
-                                total += TotalPo;
+                                total += (TotalPo - product.Reduction);
                                 productOrder.Total = TotalPo;
                             }
                         } else
                         {
                             decimal TotalPo = product.Price * poc.Quantity;
-                            total += TotalPo;
+                            total += (TotalPo - product.Reduction);
                             productOrder.Total = TotalPo;
                         }
 

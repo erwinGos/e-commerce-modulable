@@ -30,6 +30,9 @@ namespace Database.Entities
 
         public bool IsDeactivated { get; set; }
 
+        //Elle est appliquée après la tax.
+        public decimal Reduction {  get; set; } = 0;
+
         public DateTime CreatedAt { get; set; }
 
         public DateTime LastUpdatedAt { get; set;}
