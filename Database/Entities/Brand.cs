@@ -15,6 +15,8 @@ namespace Database.Entities
         [StringLength(256)]
         public required string Name { get; set; }
 
+        public bool IsArchived { get; set; } = false;
+
         public byte[]? Logo { get; set; }
 
         public DateTime CreatedAt { get; set; }

@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Authorization;
 using Stripe;
 using Stripe.Climate;
 using AutoMapper;
+using System.Drawing.Drawing2D;
+using Data.Services;
 
 namespace appleEarStore.WebApi.Controllers
 {
@@ -15,11 +17,13 @@ namespace appleEarStore.WebApi.Controllers
     public class ProductController : ControllerBase
     {
         private readonly IProductService _productService;
+        private readonly IBrandService _brandService;
         private readonly IMapper _mapper;
 
-        public ProductController(IMapper mapper, IProductService productService, IStripeService stripeService)
+        public ProductController(IMapper mapper, IProductService productService, IBrandService brandService)
         {
             _productService = productService;
+            _brandService = brandService;
             _mapper = mapper;
         }
 
@@ -56,8 +60,6 @@ namespace appleEarStore.WebApi.Controllers
         [HttpPost("create")]
         public async Task<IActionResult> CreateProduct(CreateProduct createProduct)
         {
-            Stripe.Product stripeProduct = null;
-
             try
             {
                 ProductRead createdProduct = await _productService.CreateProduct(createProduct);
@@ -92,6 +94,23 @@ namespace appleEarStore.WebApi.Controllers
                 ProductRead updatedProduct = await _productService.DeactivateProduct(productId);
                 return Ok(updatedProduct);
             } catch(Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
+        [Authorize(Roles = "Admin")]
+        [HttpPost("groupchangebrand")]
+        public async Task<IActionResult> ChangeBrandFromGroupedProduct(int newBrandId, int oldBrandId)
+        {
+            try
+            {
+                Brand brand = await _brandService.GetSingleBrandById(oldBrandId) ?? throw new Exception("Cette marque n'existe pas, elle n'a donc pas de produit corrélés.");
+                List<Database.Entities.Product> productList = await _productService.GetAllProductsByBrand(brand.Id);
+                List<Database.Entities.Product> products = await _productService.ChangeBrandFromGroupedProduct(productList, newBrandId);
+                return Ok(products);
+            }
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }

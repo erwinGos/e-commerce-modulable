@@ -46,10 +46,30 @@ namespace Data.Services
         {
             try
             {
-                Brand createdBrand = await _brandRepository.Insert(brandCreate);
+                Brand brandToCreate = _mapper.Map<Brand>(brandCreate);
+                Brand createdBrand = await _brandRepository.Insert(brandToCreate);
 
                 return createdBrand;
             } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<Brand> DeleteBrand(Brand brand, bool hasChild)
+        {
+            try
+            {
+                if(hasChild)
+                {
+                    throw new Exception("Vous ne pouvez pas supprimer cette marque car elle possède un ou plusieurs produits.");
+                } else
+                {
+                    Brand brandToDelete = await _brandRepository.Delete(brand);
+                    return brandToDelete;
+                }
+            }
+            catch (Exception ex)
             {
                 throw new Exception(ex.Message);
             }

@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Database.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    [Migration("20240220204053_firstMigration")]
+    [Migration("20240221171447_firstMigration")]
     partial class firstMigration
     {
         /// <inheritdoc />
@@ -110,6 +110,9 @@ namespace Database.Migrations
                     b.Property<DateTime>("CreatedAt")
                         .HasColumnType("datetime(6)");
 
+                    b.Property<bool>("IsArchived")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<byte[]>("Logo")
                         .HasColumnType("longblob");
 
@@ -198,7 +201,7 @@ namespace Database.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<decimal>("Discount_amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(8, 5)");
 
                     b.Property<DateTime>("EstimatedDeliveryDate")
                         .HasColumnType("datetime(6)");
@@ -236,13 +239,13 @@ namespace Database.Migrations
                         .HasColumnType("longtext");
 
                     b.Property<decimal>("Total")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(8, 5)");
 
                     b.Property<decimal>("TotalWeight")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(8, 5)");
 
                     b.Property<decimal>("Total_without_tax")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(8, 5)");
 
                     b.Property<int>("UserId")
                         .HasColumnType("int");
@@ -287,10 +290,10 @@ namespace Database.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(8, 5)");
 
                     b.Property<decimal>("PriceWithoutTax")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(8, 5)");
 
                     b.Property<string>("ProductName")
                         .IsRequired()
@@ -298,7 +301,7 @@ namespace Database.Migrations
                         .HasColumnType("varchar(256)");
 
                     b.Property<decimal>("Weight")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(8, 5)");
 
                     b.HasKey("Id");
 
@@ -342,7 +345,7 @@ namespace Database.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<decimal>("Discount_Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(8, 5)");
 
                     b.Property<int>("OrderId")
                         .HasColumnType("int");
@@ -357,10 +360,10 @@ namespace Database.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Total")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(8, 5)");
 
                     b.Property<decimal>("TotalWithoutTax")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(8, 5)");
 
                     b.Property<DateTime>("UpdatedAt")
                         .HasColumnType("datetime(6)");
@@ -398,7 +401,7 @@ namespace Database.Migrations
                         .HasColumnType("datetime(6)");
 
                     b.Property<decimal>("DiscountPercentage")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(8, 5)");
 
                     b.Property<DateTime>("ExpirationDate")
                         .HasColumnType("datetime(6)");
@@ -462,7 +465,7 @@ namespace Database.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Balance")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(8, 5)");
 
                     b.Property<string>("Email")
                         .IsRequired()
@@ -535,7 +538,7 @@ namespace Database.Migrations
                         .HasColumnType("int");
 
                     b.Property<decimal>("Amount")
-                        .HasColumnType("decimal(18,2)");
+                        .HasColumnType("decimal(8, 5)");
 
                     b.Property<string>("Code")
                         .IsRequired()
