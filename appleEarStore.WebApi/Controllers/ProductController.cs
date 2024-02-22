@@ -56,6 +56,20 @@ namespace appleEarStore.WebApi.Controllers
             }
         }
 
+        [HttpGet("mostsoldproduct")]
+        public async Task<IActionResult> GetMostSoldProducts()
+        {
+            try
+            {
+                List<Database.Entities.Product> products = await _productService.GetMostSoldProducts();
+                return Ok(products);
+            }
+            catch (Exception ex)
+            {
+                return BadRequest(ex.Message);
+            }
+        }
+
         [Authorize(Roles = "Admin")]
         [HttpPost("create")]
         public async Task<IActionResult> CreateProduct(CreateProduct createProduct)

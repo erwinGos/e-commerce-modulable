@@ -16,6 +16,8 @@ namespace Database.Entities
 
         public required byte[] MainLogo { get; set; }
 
+        public int MainProductId { get; set; }
+
         [StringLength(256)]
         public string Address { get; set; } = "";
 
