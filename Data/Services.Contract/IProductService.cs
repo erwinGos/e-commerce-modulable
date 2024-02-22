@@ -15,5 +15,9 @@ namespace Data.Services.Contract
         public Task<ProductRead> DeactivateProduct(int productId);
 
         public Task<ProductRead> CreateProduct(CreateProduct createProduct);
+
+        public Task<List<Product>> ChangeBrandFromGroupedProduct(List<Product> products, int BrandId);
+
+        public Task<List<Product>> GetAllProductsByBrand(int BrandId);
     }
 }
