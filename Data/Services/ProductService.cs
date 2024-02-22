@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using Data.DTO.Pagination;
 using Data.DTO.ProductDto;
+using Data.DTO.ProductOrder;
 using Data.Repository;
 using Data.Repository.Contract;
 using Data.Services.Contract;
@@ -11,15 +12,36 @@ namespace Data.Services
     public class ProductService : IProductService
     {
         private readonly IProductRepository _productRepository;
+        private readonly IProductOrderRepository _productOrderRepository;
         private readonly IBrandRepository _brandRepository;
 
         private readonly IMapper _mapper;
 
-        public ProductService(IProductRepository productRepository, IBrandRepository brandRepository, IMapper mapper)
+        public ProductService(IProductRepository productRepository, IProductOrderRepository productOrderRepository, IBrandRepository brandRepository, IMapper mapper)
         {
             _productRepository = productRepository;
+            _productOrderRepository = productOrderRepository;
             _brandRepository = brandRepository;
             _mapper = mapper;
+        }
+
+        public async Task<List<Product>> GetMostSoldProducts()
+        {
+            try
+            {
+                List<Product> products = [];
+                List<CountProduct> countProduct = _productOrderRepository.GetMostSoldProduct();
+                foreach (var product in countProduct)
+                {
+                    Product productFetched = await _productRepository.GetById(product.ProductId);
+                    products.Add(productFetched);
+                }
+
+                return products;
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
         }
 
         public async Task<ProductRead> CreateProduct(CreateProduct createProduct)
