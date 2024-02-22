@@ -19,14 +19,13 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 var stripeSettings = builder.Configuration.GetSection("StripeSettings").Get<StripeSettings>();
 StripeConfiguration.ApiKey = stripeSettings.ApiKey;
 
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddCors(options =>
 {
 options.AddPolicy("AllowAll", 
     builder =>
     {
-        builder.WithOrigins("http://localhost:3000") // Remplacez par l'URL de votre client
+        builder.WithOrigins("http://localhost:3000")
                        .AllowCredentials()
                        .AllowAnyHeader()
                        .AllowAnyMethod();

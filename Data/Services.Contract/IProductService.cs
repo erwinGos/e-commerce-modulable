@@ -8,6 +8,8 @@ namespace Data.Services.Contract
     {
         public Task<List<ProductRead>> GetProductListAsync(PaginationParameters parameters);
 
+        public Task<List<Product>> GetMostSoldProducts();
+
         public Task<ProductRead> FindOne(int productId);
 
         public Task<ProductRead> UpdateProduct(Product product);

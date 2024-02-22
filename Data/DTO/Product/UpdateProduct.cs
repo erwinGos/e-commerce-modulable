@@ -29,6 +29,8 @@ namespace Data.DTO.ProductDto
 
         public int? CurrentStock { get; set; } = null;
 
+        public decimal? Reduction { get; set; } = 0;
+
         public decimal? Weight { get; set; } = null;
 
         public bool? IsDeactivated { get; set; } = null;

@@ -1,9 +1,6 @@
 ﻿using Database.Entities;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
-using System.Configuration;
-using System.Reflection.Emit;
+
 
 namespace Database
 {

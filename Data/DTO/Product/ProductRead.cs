@@ -23,6 +23,8 @@ namespace Data.DTO.ProductDto
 
         public decimal Weight { get; set; }
 
+        public decimal Reduction { get; set; }
+
         public bool IsDeactivated { get; set; }
 
         [StringLength(256)]

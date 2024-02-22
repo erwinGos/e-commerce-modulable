@@ -7,7 +7,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 namespace Database.Migrations
 {
     /// <inheritdoc />
-    public partial class firstMigration : Migration
+    public partial class FirstMigration : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -25,7 +25,7 @@ namespace Database.Migrations
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     IsArchived = table.Column<bool>(type: "tinyint(1)", nullable: false),
                     Logo = table.Column<byte[]>(type: "longblob", nullable: true),
-                    CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
+                    UpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -187,6 +187,7 @@ namespace Database.Migrations
                     CurrentStock = table.Column<int>(type: "int", nullable: false),
                     Weight = table.Column<decimal>(type: "decimal(8,5)", nullable: false),
                     IsDeactivated = table.Column<bool>(type: "tinyint(1)", nullable: false),
+                    Reduction = table.Column<decimal>(type: "decimal(8,5)", nullable: false),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),
                     LastUpdatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false)
                 },
@@ -346,6 +347,7 @@ namespace Database.Migrations
                     Discount_Amount = table.Column<decimal>(type: "decimal(8,5)", nullable: false),
                     TotalWithoutTax = table.Column<decimal>(type: "decimal(8,5)", nullable: false),
                     Total = table.Column<decimal>(type: "decimal(8,5)", nullable: false),
+                    Reduction = table.Column<decimal>(type: "decimal(8,5)", nullable: false),
                     UsedPromoCode = table.Column<string>(type: "longtext", nullable: false)
                         .Annotation("MySql:CharSet", "utf8mb4"),
                     CreatedAt = table.Column<DateTime>(type: "datetime(6)", nullable: false),

@@ -27,6 +27,8 @@ namespace Data.DTO.ProductDto
         [Required(ErrorMessage = "Veuillez saisir un poids (en grammes).")]
         public decimal Weight { get; set; }
 
+        public decimal Reduction { get; set; } = 0;
+
         public bool IsDeactivated { get; set; } = false;
 
         public DateTime LastUpdatedAt { get; set; } = DateTime.UtcNow;

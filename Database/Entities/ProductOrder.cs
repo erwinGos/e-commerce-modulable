@@ -21,6 +21,8 @@ namespace Database.Entities
 
         public decimal Total { get; set;}
 
+        public decimal Reduction { get; set; }
+
         public string UsedPromoCode { get; set; } = string.Empty;
 
         public DateTime CreatedAt { get; set; }

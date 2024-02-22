@@ -297,6 +297,9 @@ namespace Database.Migrations
                         .HasMaxLength(256)
                         .HasColumnType("varchar(256)");
 
+                    b.Property<decimal>("Reduction")
+                        .HasColumnType("decimal(8, 5)");
+
                     b.Property<decimal>("Weight")
                         .HasColumnType("decimal(8, 5)");
 
@@ -352,6 +355,9 @@ namespace Database.Migrations
 
                     b.Property<int>("Quantity")
                         .HasColumnType("int");
+
+                    b.Property<decimal>("Reduction")
+                        .HasColumnType("decimal(8, 5)");
 
                     b.Property<int?>("ReturnId")
                         .HasColumnType("int");
