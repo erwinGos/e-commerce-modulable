@@ -30,6 +30,17 @@ namespace Data.Services
             }
         }
 
+        public async Task<List<Brand>> GetAllBrands()
+        {
+            try
+            {
+                return await _brandRepository.GetAll();
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
         public async Task<Brand> GetSingleBrandByName(string Name)
         {
             try
@@ -50,6 +61,19 @@ namespace Data.Services
                 Brand createdBrand = await _brandRepository.Insert(brandToCreate);
 
                 return createdBrand;
+            } catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<Brand> UpdateBrand(Brand brandCreate)
+        {
+            try
+            {
+                
+                Brand updatedBrand = await _brandRepository.Update(brandCreate);
+                return updatedBrand;
             } catch (Exception ex)
             {
                 throw new Exception(ex.Message);

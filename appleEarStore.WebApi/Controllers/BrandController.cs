@@ -9,6 +9,8 @@ using Data.DTO.Pagination;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.SignalR.Protocol;
 using Data.DTO.ProductDto;
+using Data.Managers;
+using System.Drawing.Drawing2D;
 
 
 namespace appleEarStore.WebApi.Controllers
@@ -24,6 +26,18 @@ namespace appleEarStore.WebApi.Controllers
         {
             _brandService = brandService;
             _productService = productService;
+        }
+
+        [HttpGet("getall")]
+        public async Task<IActionResult> GetAllBrand()
+        {
+            try
+            {
+                return Ok(await _brandService.GetAllBrands());
+            } catch (Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
         }
 
         [HttpGet("singleById/{Id}")]
@@ -59,41 +73,55 @@ namespace appleEarStore.WebApi.Controllers
         {
             try
             {
-                const int maxImageSize = 2 * 1024 * 1024;
-                List<string> allowedExtensions = new List<string> { ".png", ".jpg", ".jpeg" };
-                var memoryStream = new MemoryStream();
-                if (brandCreate.Logo != null)
-                {
-                    await brandCreate.Logo.CopyToAsync(memoryStream);
-                    string fileExtension = Path.GetExtension(brandCreate.Logo.FileName).ToLowerInvariant();
-
-                    if (!allowedExtensions.Contains(fileExtension))
-                    {
-                        throw new Exception("Format invalide. Seulement les formats JPG et PNG sont acceptés.");
-                    }
-
-                    if (brandCreate.Logo.Length > maxImageSize)
-                    {
-                        throw new Exception("La taille du fichier excède la taille maximum autorisée.");
-                    }
-                }
-
+                Brand checkIfExists = await _brandService.GetSingleBrandByName(brandCreate.Name) != null ? throw new Exception("Une marque avec ce nom existe déjà.") : null;
                 Brand brand = new Brand()
                 {
                     Name = brandCreate.Name,
-                    CreatedAt = DateTime.UtcNow,
+                    UpdatedAt = DateTime.UtcNow,
                     Logo = null
                 };
-
-                if(memoryStream != null)
+                
+                if(brandCreate.Logo != null)
                 {
-                    brand.Logo = memoryStream.ToArray();
+                    byte[] memoryStream = await ImageManager.ConvertImage(brandCreate.Logo, [".png", ".jpg", ".jpeg"], 2);
+                    if (memoryStream != null)
+                    {
+                        brand.Logo = memoryStream;
+                    }
                 }
-                await _brandService.CreateBrand(brand);
-
-                return Ok(brand);
+                return Ok(await _brandService.CreateBrand(brand));
             }
             catch (Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
+        }
+
+        [HttpPatch("")]
+        [Authorize(Roles = "Admin")]
+        public async Task<IActionResult> UpdateBrand(UpdateBrand updateBrand)
+        {
+            try
+            {
+                Brand brand = new Brand()
+                {
+                    Id = updateBrand.Id,
+                    Name = updateBrand.Name,
+                    Logo = null,
+                    UpdatedAt = DateTime.Now
+                };
+
+                if (updateBrand.Logo != null)
+                {
+                    byte[] memoryStream = await ImageManager.ConvertImage(updateBrand.Logo, [".png", ".jpg", ".jpeg"], 2);
+                    if (memoryStream != null)
+                    {
+                        brand.Logo = memoryStream;
+                    }
+                }
+
+                return Ok(await _brandService.UpdateBrand(brand));
+            } catch (Exception ex)
             {
                 return BadRequest(new { ex.Message });
             }

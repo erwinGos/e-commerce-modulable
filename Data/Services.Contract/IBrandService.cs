@@ -9,7 +9,11 @@ namespace Data.Services.Contract
 
         public Task<Brand> GetSingleBrandByName(string Name);
 
+        public Task<List<Brand>> GetAllBrands();
+
         public Task<Brand> CreateBrand(Brand createBrand);
+
+        public Task<Brand> UpdateBrand(Brand createBrand);
 
         public Task<Brand> DeleteBrand(Brand createBrand, bool hasChild);
     }
