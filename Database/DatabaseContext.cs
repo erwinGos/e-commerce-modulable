@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using System.Configuration;
+using System.Reflection.Emit;
 
 namespace Database
 {
@@ -82,9 +83,19 @@ namespace Database
             {
                 entity.HasIndex(e => e.Code).IsUnique();
             });
+
+            foreach (var entityType in builder.Model.GetEntityTypes())
+            {
+                foreach (var property in entityType.GetProperties())
+                {
+                    if (property.ClrType == typeof(decimal) || property.ClrType == typeof(decimal?))
+                    {
+                        property.SetColumnType("decimal(8, 5)");
+                    }
+                }
+            }
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySQL("server=localhost;database=appleearstore;port=3306;User=root;").LogTo(Console.WriteLine, LogLevel.Information)
-                  .EnableSensitiveDataLogging();
+        => optionsBuilder.UseMySql("server=localhost;database=appleearstore;port=3306;User=root;", new MySqlServerVersion(new Version(8, 0, 21)));
     }
 }

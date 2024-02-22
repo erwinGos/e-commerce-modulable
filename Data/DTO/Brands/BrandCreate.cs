@@ -1,4 +1,4 @@
-﻿
+﻿using Microsoft.AspNetCore.Http;
 
 namespace Data.DTO.Brands
 {
@@ -6,8 +6,6 @@ namespace Data.DTO.Brands
     {
         public required string Name { get; set; }
 
-        public byte[]? Logo { get; set; } = new byte[256];
-
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public IFormFile? Logo { get; set; }
     }
 }

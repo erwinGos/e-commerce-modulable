@@ -27,10 +27,6 @@ namespace Data.DTO.ProductDto
         [Required(ErrorMessage = "Veuillez saisir un poids (en grammes).")]
         public decimal Weight { get; set; }
 
-        public string StripeProductId { get; set; } = "";
-
-        public string StripePriceId { get; set; } = "";
-
         public bool IsDeactivated { get; set; } = false;
 
         public DateTime LastUpdatedAt { get; set; } = DateTime.UtcNow;

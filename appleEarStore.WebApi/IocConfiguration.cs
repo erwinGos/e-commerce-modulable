@@ -22,6 +22,7 @@ namespace appleEarStore.WebApi
             services.AddScoped<IProductOrderRepository, ProductOrderRepository>();
             services.AddScoped<IAddressRepository, AddressRepository>();
             services.AddScoped<IBrandRepository, BrandRepository>();
+            services.AddScoped<IProductImageRepository, ProductImageRepository>();
 
             return services;
         }
@@ -37,6 +38,7 @@ namespace appleEarStore.WebApi
             services.AddScoped<IPromoService, PromoService>();
             services.AddScoped<IAddressService, AddressService>();
             services.AddScoped<IBrandService, BrandService>();
+            services.AddScoped<IProductImageService, ProductImageService>();
 
 
             //Order Manager
@@ -55,8 +57,9 @@ namespace appleEarStore.WebApi
         public static IServiceCollection ConfigureDBContext(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("BddConnection");
+            var serverVersion = new MySqlServerVersion(new Version(8, 0, 21));
 
-            services.AddDbContext<DatabaseContext>(options => options.UseMySQL(connectionString)
+            services.AddDbContext<DatabaseContext>(options => options.UseMySql(serverVersion)
                 .LogTo(Console.WriteLine, LogLevel.Information)
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors());

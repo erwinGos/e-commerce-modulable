@@ -5,9 +5,6 @@ using Data.Managers;
 using Data.Repository.Contract;
 using Data.Services.Contract;
 using Database.Entities;
-using Google.Protobuf.WellKnownTypes;
-using System.Globalization;
-using System;
 using AutoMapper;
 
 namespace Data.Services
