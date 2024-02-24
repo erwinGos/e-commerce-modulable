@@ -23,6 +23,6 @@ namespace Data.DTO.Promo
 
         public required DateTime ExpirationDate { get; set; }
 
-        public virtual ICollection<ProductPromo> Products { get; set; }
+        public virtual ICollection<ProductRelationnalAdd> Products { get; set; }
     }
 }

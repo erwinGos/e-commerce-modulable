@@ -1,6 +1,5 @@
 ﻿
 
-using Data.DTO.Product;
 using Data.DTO.ProductDto;
 using Database.Entities;
 
