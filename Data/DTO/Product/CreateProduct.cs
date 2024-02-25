@@ -1,4 +1,6 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using Data.DTO.Color;
+using Data.DTO.Promo;
+using System.ComponentModel.DataAnnotations;
 
 namespace Data.DTO.ProductDto
 {
@@ -34,5 +36,9 @@ namespace Data.DTO.ProductDto
         public DateTime LastUpdatedAt { get; set; } = DateTime.UtcNow;
 
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        public ICollection<ColorRelationnalAdd> Colors { get; set; }
+
+        public ICollection<PromoRelationnalAdd> PromoCodes { get; set; }
     }
 }
