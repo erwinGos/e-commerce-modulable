@@ -5,7 +5,6 @@ using Data.DTO.Cart;
 using Data.DTO.Category;
 using Data.DTO.Color;
 using Data.DTO.Order;
-using Data.DTO.Product;
 using Data.DTO.ProductDto;
 using Data.DTO.ProductOrderDto;
 using Data.DTO.Promo;
@@ -30,9 +29,13 @@ namespace Data
 
             //Color
             CreateMap<Color, ColorRead>();
+            CreateMap<ColorCreate, Color>();
+            CreateMap<ColorUpdate, Color>();
 
             //Category
             CreateMap<Category, CategoryRead>();
+            CreateMap<CategoryCreate, Category>();
+            CreateMap<CategoryUpdate, Category>();
 
             //Order
             CreateMap<Order, OrderRead>();
@@ -41,10 +44,11 @@ namespace Data
             CreateMap<ProductOrder, ProductOrderRead>();
 
             // Promo
-            CreateMap<ProductPromo, Product>();
+            CreateMap<CreatePromo, PromoCode>();
             CreateMap<CreatePromo, PromoCode>();
 
             // Product
+            CreateMap<ProductRelationnalAdd, Product>();
             CreateMap<ProductRead, Product>();
             CreateMap<Product, ProductReadOrder>();
             CreateMap<Product, CartProduct>();

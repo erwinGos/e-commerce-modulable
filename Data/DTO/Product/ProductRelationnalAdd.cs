@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Data.DTO.ProductDto
 {
-    public class ProductPromo
+    public class ProductRelationnalAdd
     {
         public int Id { get; set; }
     }

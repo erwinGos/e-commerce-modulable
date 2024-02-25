@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using Data.DTO.ProductDto;
 
 namespace Data.DTO.Category
 {
@@ -14,5 +9,7 @@ namespace Data.DTO.Category
         public required string Name { get; set; }
 
         public DateTime CreatedAt { get; set; }
+
+        public virtual ICollection<ProductRead> Products { get; set; } = new List<ProductRead>();
     }
 }
