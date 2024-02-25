@@ -29,6 +29,8 @@ namespace Data
 
             //Color
             CreateMap<Color, ColorRead>();
+            CreateMap<ColorCreate, Color>();
+            CreateMap<ColorUpdate, Color>();
 
             //Category
             CreateMap<Category, CategoryRead>();
