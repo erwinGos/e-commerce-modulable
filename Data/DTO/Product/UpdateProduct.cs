@@ -1,4 +1,6 @@
-﻿using Database.Entities;
+﻿using Data.DTO.Color;
+using Data.DTO.Promo;
+using Database.Entities;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
@@ -36,5 +38,9 @@ namespace Data.DTO.ProductDto
         public bool? IsDeactivated { get; set; } = null;
 
         public DateTime LastUpdatedAt { get; set; } = DateTime.UtcNow;
+
+        public ICollection<ColorRelationnalAdd> Colors { get; set; }
+
+        public ICollection<PromoRelationnalAdd> PromoCodes { get; set; }
     }
 }

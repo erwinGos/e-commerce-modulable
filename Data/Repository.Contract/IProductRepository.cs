@@ -13,5 +13,7 @@ namespace Data.Repository.Contract
         public Task<List<Product>> GetProductListAsync(PaginationParameters parameters);
 
         public Task<Product> GetProductAsync(int productId);
+
+        public Task<Product> UpdateProduct(Product product);
     }
 }

@@ -63,5 +63,44 @@ namespace Data.Repository
                 throw new Exception(ex.Message);
             }
         }
+
+        public async Task<Product> UpdateProduct(Product updateProduct)
+        {
+            try
+            {
+
+                var productToUpdate = _table
+                    .Include(c => c.Colors)
+                    .Include(c => c.PromoCodes)
+                    .FirstOrDefault(c => c.Id == updateProduct.Id) ?? throw new Exception("Produit non trouvée.");
+
+                if (productToUpdate != null)
+                {
+                    productToUpdate.Colors.Clear();
+                    productToUpdate.PromoCodes.Clear();
+
+                    productToUpdate.BrandId = updateProduct.BrandId;
+                    productToUpdate.ProductName = updateProduct.ProductName;
+                    productToUpdate.Ean = updateProduct.Ean;
+                    productToUpdate.Price = updateProduct.Price;
+                    productToUpdate.PriceWithoutTax = updateProduct.PriceWithoutTax;
+                    productToUpdate.Description = updateProduct.Description;
+                    productToUpdate.CurrentStock = updateProduct.CurrentStock;
+                    productToUpdate.Weight = updateProduct.Weight;
+                    productToUpdate.IsDeactivated = updateProduct.IsDeactivated;
+                    productToUpdate.Reduction = updateProduct.Reduction;
+                    productToUpdate.LastUpdatedAt = updateProduct.LastUpdatedAt;
+                    productToUpdate.PromoCodes = updateProduct.PromoCodes;
+                    productToUpdate.Colors = updateProduct.Colors;
+
+                    await _db.SaveChangesAsync().ConfigureAwait(false);
+                }
+                return productToUpdate;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
