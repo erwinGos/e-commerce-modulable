@@ -1,7 +1,9 @@
 ﻿using AutoMapper;
+using Data.DTO.Color;
 using Data.DTO.Pagination;
 using Data.DTO.ProductDto;
 using Data.DTO.ProductOrder;
+using Data.DTO.Promo;
 using Data.Repository;
 using Data.Repository.Contract;
 using Data.Services.Contract;
@@ -13,16 +15,20 @@ namespace Data.Services
     {
         private readonly IProductRepository _productRepository;
         private readonly IProductOrderRepository _productOrderRepository;
+        private readonly IPromoRepository _promoRepository;
+        private readonly IColorRepository _colorRepository;
         private readonly IBrandRepository _brandRepository;
 
         private readonly IMapper _mapper;
 
-        public ProductService(IProductRepository productRepository, IProductOrderRepository productOrderRepository, IBrandRepository brandRepository, IMapper mapper)
+        public ProductService(IPromoRepository promoRepository, IColorRepository colorRepository, IProductRepository productRepository, IProductOrderRepository productOrderRepository, IBrandRepository brandRepository, IMapper mapper)
         {
             _productRepository = productRepository;
             _productOrderRepository = productOrderRepository;
             _brandRepository = brandRepository;
             _mapper = mapper;
+            _promoRepository = promoRepository;
+            _colorRepository = colorRepository;
         }
 
         public async Task<List<Product>> GetMostSoldProducts()
@@ -48,7 +54,44 @@ namespace Data.Services
         {
             try
             {
-                Product product = await _productRepository.Insert(_mapper.Map<Product>(createProduct));
+                ICollection<Color> colorsList = [];
+                ICollection<PromoCode> promoList = [];
+                if (createProduct.Colors != null)
+                {
+                    foreach (ColorRelationnalAdd color in createProduct.Colors)
+                    {
+                        try
+                        {
+                            Color fetchColor = await _colorRepository.GetById(color.Id);
+                            if (fetchColor != null)
+                                colorsList.Add(fetchColor);
+                        } catch(Exception ex)
+                        {
+                            Console.WriteLine(ex);
+                        }
+                    }
+                }
+                if (createProduct.PromoCodes != null)
+                {
+                    foreach (PromoRelationnalAdd promo in createProduct.PromoCodes)
+                    {
+                        try
+                        {
+                            PromoCode fetchPromo = await _promoRepository.GetById(promo.Id);
+                            if (fetchPromo != null)
+                                promoList.Add(fetchPromo);
+                        } catch (Exception ex)
+                        {
+                            Console.WriteLine(ex);
+                        }
+                    }
+                }
+                createProduct.Colors = null;
+                createProduct.PromoCodes = null;
+                Product productToCreate = _mapper.Map<Product>(createProduct);
+                productToCreate.Colors = colorsList;
+                productToCreate.PromoCodes = promoList;
+                Product product = await _productRepository.Insert(productToCreate);
                 return _mapper.Map<ProductRead>(product);
             } catch (Exception ex)
             {
@@ -97,11 +140,50 @@ namespace Data.Services
             }
         }
 
-        public async Task<ProductRead> UpdateProduct(Product updateProduct)
+        public async Task<ProductRead> UpdateProduct(UpdateProduct updateProduct)
         {
             try
             {
-                Product updatedProduct = await _productRepository.Update(updateProduct, updateProduct.Id);
+                ICollection<Color> colorsList = [];
+                ICollection<PromoCode> promoList = [];
+                if (updateProduct.Colors != null)
+                {
+                    foreach (ColorRelationnalAdd color in updateProduct.Colors)
+                    {
+                        try
+                        {
+                            Color fetchColor = await _colorRepository.GetById(color.Id);
+                            if (fetchColor != null)
+                                colorsList.Add(fetchColor);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex);
+                        }
+                    }
+                }
+                if (updateProduct.PromoCodes != null)
+                {
+                    foreach (PromoRelationnalAdd promo in updateProduct.PromoCodes)
+                    {
+                        try
+                        {
+                            PromoCode fetchPromo = await _promoRepository.GetById(promo.Id);
+                            if (fetchPromo != null)
+                                promoList.Add(fetchPromo);
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine(ex);
+                        }
+                    }
+                }
+                updateProduct.Colors = null;
+                updateProduct.PromoCodes = null;
+                Product productToUpdate = _mapper.Map<Product>(updateProduct);
+                productToUpdate.Colors = colorsList;
+                productToUpdate.PromoCodes = promoList;
+                Product updatedProduct = await _productRepository.UpdateProduct(productToUpdate);
                 return _mapper.Map<ProductRead>(updatedProduct);
             } catch (Exception ex)
             {

@@ -12,7 +12,7 @@ namespace Data.Services.Contract
 
         public Task<ProductRead> FindOne(int productId);
 
-        public Task<ProductRead> UpdateProduct(Product product);
+        public Task<ProductRead> UpdateProduct(UpdateProduct product);
 
         public Task<ProductRead> DeactivateProduct(int productId);
 

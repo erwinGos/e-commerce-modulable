@@ -91,7 +91,7 @@ namespace appleEarStore.WebApi.Controllers
         {
             try
             {
-                ProductRead updatedProduct = await _productService.UpdateProduct(_mapper.Map<Database.Entities.Product>(updateProduct));
+                ProductRead updatedProduct = await _productService.UpdateProduct(updateProduct);
                 return Ok(updatedProduct);
             } catch (Exception ex)
             {
