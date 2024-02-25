@@ -9,6 +9,7 @@ using Data.DTO.ProductDto;
 using Data.DTO.ProductOrderDto;
 using Data.DTO.Promo;
 using Data.DTO.User;
+using Data.DTO.Voucher;
 using Database.Entities;
 
 namespace Data
@@ -67,6 +68,9 @@ namespace Data
             CreateMap<AddToCart, UserCart>();
             CreateMap<UserCart, CartRead>()
            .ForMember(dest => dest.Product, opt => opt.MapFrom(src => src.Product));
+
+            //Voucher
+            CreateMap<VoucherCreate, Vouchers>();
         }
     }
 }
