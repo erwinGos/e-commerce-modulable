@@ -39,7 +39,7 @@ namespace Data.Services
                 List<CountProduct> countProduct = _productOrderRepository.GetMostSoldProduct();
                 foreach (var product in countProduct)
                 {
-                    Product productFetched = await _productRepository.GetById(product.ProductId);
+                    Product productFetched = await _productRepository.FindSingleBy(p => p.Id == product.ProductId, p => p.Brand);
                     products.Add(productFetched);
                 }
 
