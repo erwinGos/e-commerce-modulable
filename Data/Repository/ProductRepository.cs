@@ -38,7 +38,8 @@ namespace Data.Repository
 
                 var filteredByBrand = query.Where(product => parameters.Brands.Length > 0 ? parameters.Brands.Contains(product.Brand.Name) : true);
                 var filteredByColors = filteredByBrand.Where(product => parameters.Colors.Length > 0 ? product.Colors.Any(color => parameters.Colors.Contains(color.Name)) : true).ToList();
-                return filteredByColors;
+                var filteredByCategories = filteredByColors.Where(product => parameters.Categories.Length > 0 ? product.Categories.Any(cat => parameters.Categories.Contains(cat.Name)) : true).ToList();
+                return filteredByCategories;
 
             } catch (Exception ex)
             {

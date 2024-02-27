@@ -29,11 +29,11 @@ namespace appleEarStore.WebApi.Controllers
         }
 
         [HttpGet("getall")]
-        public async Task<IActionResult> GetAllBrand()
+        public async Task<IActionResult> GetAllBrand([FromQuery] int page, [FromQuery] int maxResult)
         {
             try
             {
-                return Ok(await _brandService.GetAllBrands());
+                return Ok(await _brandService.GetAllBrands(new PaginationParameters { Page = page, MaxResults = maxResult }));
             } catch (Exception ex)
             {
                 return BadRequest(new { ex.Message });
