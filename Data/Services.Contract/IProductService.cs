@@ -6,7 +6,7 @@ namespace Data.Services.Contract
 {
     public interface IProductService
     {
-        public Task<List<ProductRead>> GetProductListAsync(PaginationParameters parameters);
+        public Task<PaginationProduct> GetProductListAsync(PaginationParameters parameters);
 
         public Task<List<Product>> GetMostSoldProducts();
 

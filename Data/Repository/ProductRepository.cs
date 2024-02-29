@@ -3,8 +3,6 @@ using Data.Repository.Contract;
 using Database;
 using Database.Entities;
 using Microsoft.EntityFrameworkCore;
-using System.Linq.Expressions;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace Data.Repository
 {
@@ -20,7 +18,7 @@ namespace Data.Repository
             _table = _db.Set<Product>();
         }
 
-        public async Task<List<Product>> GetProductListAsync(PaginationParameters parameters)
+        public PaginationProduct GetProductListAsync(PaginationParameters parameters)
         {
             try
             {
@@ -28,6 +26,18 @@ namespace Data.Repository
                 {
                     parameters.MaxResults = 50;
                 }
+
+                var TotalProducts = _table
+                    .Include(p => p.Brand)
+                    .Include(p => p.Colors)
+                    .Include(p => p.Categories)
+                    .Include(p => p.ProductImages);
+
+                var TotalPagesfilteredByBrand = TotalProducts.Where(product => parameters.Brands.Length > 0 ? parameters.Brands.Contains(product.Brand.Name) : true);
+                var TotalPagesfilteredByColors = TotalPagesfilteredByBrand.Where(product => parameters.Colors.Length > 0 ? product.Colors.Any(color => parameters.Colors.Contains(color.Name)) : true).ToList();
+                var TotalProductsList = TotalPagesfilteredByColors.Where(product => parameters.Categories.Length > 0 ? product.Categories.Any(cat => parameters.Categories.Contains(cat.Name)) : true).ToArray();
+                var TotalPages = TotalProductsList.Length / parameters.MaxResults;
+
                 var query = _table
                     .Include(p => p.Brand)
                     .Include(p => p.Colors)
@@ -39,7 +49,7 @@ namespace Data.Repository
                 var filteredByBrand = query.Where(product => parameters.Brands.Length > 0 ? parameters.Brands.Contains(product.Brand.Name) : true);
                 var filteredByColors = filteredByBrand.Where(product => parameters.Colors.Length > 0 ? product.Colors.Any(color => parameters.Colors.Contains(color.Name)) : true).ToList();
                 var filteredByCategories = filteredByColors.Where(product => parameters.Categories.Length > 0 ? product.Categories.Any(cat => parameters.Categories.Contains(cat.Name)) : true).ToList();
-                return filteredByCategories;
+                return new PaginationProduct {  Products = filteredByCategories, maxPages = TotalPages < 1 ? 1 : TotalPages};
 
             } catch (Exception ex)
             {

@@ -93,6 +93,6 @@ namespace Database
             }
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySql("server=localhost;database=appleearstore;port=3306;User=root;", new MySqlServerVersion(new Version(8, 0, 21)));
+        => optionsBuilder.UseMySql("server=129.151.247.29;database=appleearstore;port=3306;User=root;Password=simplonco", new MySqlServerVersion(new Version(8, 0, 21)));
     }
 }

@@ -99,13 +99,13 @@ namespace Data.Services
             }
         }
 
-        public async Task<List<ProductRead>> GetProductListAsync(PaginationParameters parameters)
+        public async Task<PaginationProduct> GetProductListAsync(PaginationParameters parameters)
         {
             try
             {
-                List<Product> FilteredProducts = await _productRepository.GetProductListAsync(parameters);
+                PaginationProduct FilteredProducts = _productRepository.GetProductListAsync(parameters);
 
-                return _mapper.Map<List<ProductRead>>(FilteredProducts);
+                return FilteredProducts;
             }
             catch (Exception ex)
             {

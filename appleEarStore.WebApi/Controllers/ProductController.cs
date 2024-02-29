@@ -9,6 +9,7 @@ using Stripe.Climate;
 using AutoMapper;
 using System.Drawing.Drawing2D;
 using Data.Services;
+using Data;
 
 namespace appleEarStore.WebApi.Controllers
 {
@@ -35,7 +36,7 @@ namespace appleEarStore.WebApi.Controllers
                 string[] brandList = brands?.Split(new char[] { '|', ',' }, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
                 string[] colorList = colors?.Split(new char[] { '|', ',' }, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
                 string[] categoryList = categories?.Split(new char[] { '|', ',' }, StringSplitOptions.RemoveEmptyEntries) ?? Array.Empty<string>();
-                List<ProductRead> productList = await _productService.GetProductListAsync(new PaginationParameters() { Brands = brandList, MaxResults = maxResult, Page = page, Colors = colorList, Categories = categoryList });
+                PaginationProduct productList = await _productService.GetProductListAsync(new PaginationParameters() { Brands = brandList, MaxResults = maxResult, Page = page, Colors = colorList, Categories = categoryList });
                 return Ok(productList);
             } catch (Exception ex)
             {
