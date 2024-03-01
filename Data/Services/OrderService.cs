@@ -106,6 +106,7 @@ namespace Data.Services
                     {
                         ProductId = poc.ProductId,
                         Quantity = poc.Quantity,
+                        ColorName = poc.ColorName,
                         CreatedAt = DateTime.UtcNow,
                         UpdatedAt = DateTime.UtcNow
                     };

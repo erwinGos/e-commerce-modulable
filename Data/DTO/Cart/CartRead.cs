@@ -1,10 +1,4 @@
-﻿using Database.Entities;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
+﻿using System.Text.Json.Serialization;
 
 namespace Data.DTO.Cart
 {
@@ -19,6 +13,8 @@ namespace Data.DTO.Cart
         public int ProductId { get; set; }
 
         public int Quantity { get; set; } = 0;
+
+        public string ColorName { get; set; }
 
         public virtual required CartProduct Product { get; set; }
     }

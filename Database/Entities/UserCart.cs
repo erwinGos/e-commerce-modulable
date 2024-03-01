@@ -19,6 +19,8 @@ namespace Database.Entities
 
         public int Quantity { get; set; } = 0;
 
+        public string ColorName { get; set; } = "";
+
         public virtual required Product Product { get; set; }
     }
 }
