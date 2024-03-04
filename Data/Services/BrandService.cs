@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using Data.DTO.Brands;
+using Data.DTO.Pagination;
 using Data.Repository.Contract;
 using Data.Services.Contract;
 using Database.Entities;
@@ -30,11 +31,11 @@ namespace Data.Services
             }
         }
 
-        public async Task<List<Brand>> GetAllBrands()
+        public async Task<List<Brand>> GetAllBrands(PaginationParameters parameters)
         {
             try
             {
-                return await _brandRepository.GetAll();
+                return await _brandRepository.GetBrandListAsync(parameters);
             } catch (Exception ex)
             {
                 throw new Exception(ex.Message);

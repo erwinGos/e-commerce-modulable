@@ -15,6 +15,8 @@ namespace Database.Entities
 
         public int Quantity { get; set; } = 1;
 
+        public string ColorName { get; set; } = "";
+
         public decimal Discount_Amount { get; set; }
 
         public decimal TotalWithoutTax { get; set; }

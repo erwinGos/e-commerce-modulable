@@ -6,13 +6,13 @@ namespace Data.Services.Contract
 {
     public interface IProductService
     {
-        public Task<List<ProductRead>> GetProductListAsync(PaginationParameters parameters);
+        public Task<PaginationProduct> GetProductListAsync(PaginationParameters parameters);
 
         public Task<List<Product>> GetMostSoldProducts();
 
         public Task<ProductRead> FindOne(int productId);
 
-        public Task<ProductRead> UpdateProduct(Product product);
+        public Task<ProductRead> UpdateProduct(UpdateProduct product);
 
         public Task<ProductRead> DeactivateProduct(int productId);
 

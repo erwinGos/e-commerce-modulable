@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.SignalR.Protocol;
 using Data.DTO.ProductDto;
 using Data.Managers;
 using System.Drawing.Drawing2D;
+using Data;
 
 
 namespace appleEarStore.WebApi.Controllers
@@ -29,11 +30,11 @@ namespace appleEarStore.WebApi.Controllers
         }
 
         [HttpGet("getall")]
-        public async Task<IActionResult> GetAllBrand()
+        public async Task<IActionResult> GetAllBrand([FromQuery] int page, [FromQuery] int maxResult)
         {
             try
             {
-                return Ok(await _brandService.GetAllBrands());
+                return Ok(await _brandService.GetAllBrands(new PaginationParameters { Page = page, MaxResults = maxResult }));
             } catch (Exception ex)
             {
                 return BadRequest(new { ex.Message });
@@ -134,8 +135,8 @@ namespace appleEarStore.WebApi.Controllers
             try
             {
                 Brand brand = await _brandService.GetSingleBrandById(BrandId) ?? throw new Exception("Cette marque n'existe pas, vous ne pouvez pas la supprimer.");
-                List<ProductRead> productList = await _productService.GetProductListAsync(new PaginationParameters() { Brands = [brand.Name] , Colors = [], MaxResults = 1, Page = 1 });
-                return Ok(await _brandService.DeleteBrand(brand, productList.Count > 0));
+                PaginationProduct productList = await _productService.GetProductListAsync(new PaginationParameters() { Brands = [brand.Name] , Colors = [], MaxResults = 1, Page = 1 });
+                return Ok(await _brandService.DeleteBrand(brand, productList.Products.Count > 0));
             } catch (Exception ex)
             {
                 return BadRequest(new { ex.Message });

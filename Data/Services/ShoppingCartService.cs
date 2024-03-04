@@ -49,7 +49,7 @@ namespace Data.Services
                 {
                     UserCart newUserCartItem = _mapper.Map<UserCart>(addToCart);
                     newUserCartItem.UserId = userId;
-
+                    newUserCartItem.ColorName = addToCart.ColorName;
                     UserCart freshlyCreatedUserCartItem = await _shoppingCartRepository.Insert(newUserCartItem).ConfigureAwait(false);
                     UserCart freshlyCreatedUserCartItemWithImage = await _shoppingCartRepository.FindSingleBy(usercart => usercart.Id == freshlyCreatedUserCartItem.Id, 
                         usercart => usercart.Product.ProductImages.Take(1)

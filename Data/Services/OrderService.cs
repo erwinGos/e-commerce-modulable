@@ -93,14 +93,20 @@ namespace Data.Services
                 foreach (ProductOrderCreate poc in createOrder.Products)
                 {
                     Product product = await _productRepository.FindSingleBy(product => product.Id == poc.ProductId, product => product.PromoCodes);
+                    if(product == null)
+                    {
+                        throw new Exception("Un ou plusieurs produits n'existent pas.");
+                    }
                     if(poc.Quantity > product.CurrentStock)
                     {
+
                         throw new Exception("Un ou plusieurs produits ne sont plus en stock dans les quantités indiquées, veuillez verifier votre panier.");
                     }
                     ProductOrder productOrder = new ProductOrder()
                     {
                         ProductId = poc.ProductId,
                         Quantity = poc.Quantity,
+                        ColorName = poc.ColorName,
                         CreatedAt = DateTime.UtcNow,
                         UpdatedAt = DateTime.UtcNow
                     };

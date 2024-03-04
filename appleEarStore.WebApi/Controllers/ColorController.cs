@@ -88,7 +88,7 @@ namespace appleEarStore.WebApi.Controllers
 
         [HttpDelete("{Id}")]
         [Authorize(Roles = "Admin")]
-        public async Task<IActionResult> UpdateColor(int Id)
+        public async Task<IActionResult> DeleteColor(int Id)
         {
             try
             {
