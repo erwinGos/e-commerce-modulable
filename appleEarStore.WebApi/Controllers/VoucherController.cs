@@ -23,6 +23,7 @@ namespace appleEarStore.WebApi.Controllers
         }
 
         [HttpGet()]
+        [Authorize(Roles = "Admin")]
         public async Task<IActionResult> GetAllVoucherPagination([FromQuery] int page, [FromQuery] int maxResult)
         {
             try
