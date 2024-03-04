@@ -1,4 +1,5 @@
 ﻿using Data.DTO.Brands;
+using Data.DTO.Pagination;
 using Database.Entities;
 
 namespace Data.Services.Contract
@@ -9,7 +10,7 @@ namespace Data.Services.Contract
 
         public Task<Brand> GetSingleBrandByName(string Name);
 
-        public Task<List<Brand>> GetAllBrands();
+        public Task<List<Brand>> GetAllBrands(PaginationParameters parameters);
 
         public Task<Brand> CreateBrand(Brand createBrand);
 

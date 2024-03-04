@@ -24,6 +24,7 @@ namespace appleEarStore.WebApi
             services.AddScoped<IBrandRepository, BrandRepository>();
             services.AddScoped<IProductImageRepository, ProductImageRepository>();
             services.AddScoped<IColorRepository, ColorRepository>();
+            services.AddScoped<IVoucherRepository, VoucherRepository>();
 
             return services;
         }
@@ -42,6 +43,7 @@ namespace appleEarStore.WebApi
             services.AddScoped<IProductImageService, ProductImageService>();
             services.AddScoped<ICategoryService, CategoryService>();
             services.AddScoped<IColorService, ColorService>();
+            services.AddScoped<IVoucherService, VoucherService>();
 
             //Order Manager
             services.AddScoped<OrderManager>();

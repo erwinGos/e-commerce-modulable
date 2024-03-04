@@ -13,5 +13,7 @@ namespace Data.DTO.Pagination
         public string[] Colors { get; set; }
 
         public string[] Brands { get; set; }
+
+        public string[] Categories { get; set; }
     }
 }

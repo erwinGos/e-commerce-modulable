@@ -10,6 +10,8 @@ namespace Data.DTO.Cart
     {
         public required int ProductId { get; set; }
 
+        public string ColorName { get; set; } = "";
+
         public int Quantity { get; set; } = 1; 
     }
 }

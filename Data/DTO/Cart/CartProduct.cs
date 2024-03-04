@@ -25,6 +25,8 @@ namespace Data.DTO.Cart
 
         public decimal Price { get; set; } = 0;
 
+        public decimal Reduction { get; set;} = 0;
+
         public decimal PriceWithoutTax { get; set; } = 0;
 
         public int CurrentStock { get; set; }

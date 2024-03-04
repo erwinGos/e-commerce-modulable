@@ -39,7 +39,7 @@ namespace Data.Services
                 List<CountProduct> countProduct = _productOrderRepository.GetMostSoldProduct();
                 foreach (var product in countProduct)
                 {
-                    Product productFetched = await _productRepository.GetById(product.ProductId);
+                    Product productFetched = await _productRepository.FindSingleBy(p => p.Id == product.ProductId, p => p.Brand);
                     products.Add(productFetched);
                 }
 
@@ -99,13 +99,13 @@ namespace Data.Services
             }
         }
 
-        public async Task<List<ProductRead>> GetProductListAsync(PaginationParameters parameters)
+        public async Task<PaginationProduct> GetProductListAsync(PaginationParameters parameters)
         {
             try
             {
-                List<Product> FilteredProducts = await _productRepository.GetProductListAsync(parameters);
+                PaginationProduct FilteredProducts = _productRepository.GetProductListAsync(parameters);
 
-                return _mapper.Map<List<ProductRead>>(FilteredProducts);
+                return FilteredProducts;
             }
             catch (Exception ex)
             {
