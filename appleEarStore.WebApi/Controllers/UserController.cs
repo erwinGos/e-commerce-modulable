@@ -1,6 +1,7 @@
 using Database.Entities;
 using Microsoft.AspNetCore.Mvc;
 using Data.Services.Contract;
+using Microsoft.AspNetCore.Authorization;
 
 
 namespace appleEarStore.WebApi.Controllers
@@ -17,10 +18,18 @@ namespace appleEarStore.WebApi.Controllers
         }
 
         [HttpGet()]
-        public async Task<User> GetUserByEmail(string email)
+        [Authorize()]
+        public async Task<IActionResult> GetSelfUser()
         {
-            User user = await _UserService.GetUserByEmailAsync(email);
-            return user;
+            try
+            {
+                int userId = Int32.Parse(User.FindFirst("UserId").Value);
+                User user = await _UserService.GetUserById(userId);
+                return Ok(user);
+            } catch (Exception ex)
+            {
+                return BadRequest(new { ex.Message });
+            }
         }
     }
 }

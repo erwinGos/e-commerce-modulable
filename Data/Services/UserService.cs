@@ -15,9 +15,9 @@ namespace Data.Services
             _UserRepository = userRepository;
         }
 
-        public async Task<User> GetUserByEmailAsync(string email)
+        public async Task<User> GetUserById(int Id)
         {
-            User users = await _UserRepository.FindSingleBy(u => u.Email == email);
+            User users = await _UserRepository.FindSingleBy(u => u.Id == Id);
             return users;
         }
     }
