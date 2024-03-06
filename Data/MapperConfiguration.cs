@@ -27,6 +27,7 @@ namespace Data
 
             // Users
             CreateMap<SignUpUser, User>();
+            CreateMap<UpdateUser, User>();
 
             //Color
             CreateMap<Color, ColorRead>();
