@@ -1,4 +1,5 @@
-﻿using Data.DTO.Pagination;
+﻿using Data.DTO.Order;
+using Data.DTO.Pagination;
 using Data.Repository.Contract;
 using Database;
 using Database.Entities;
@@ -16,7 +17,7 @@ namespace Data.Repository
             _productRepository = productRepository;
         }
 
-        public async Task<List<Order>> GetOrderListAsync(int userId, PaginationParameters parameters)
+        public async Task<PaginationOrder> GetOrderListAsync(int userId, PaginationParameters parameters)
         {
             try
             {
@@ -24,6 +25,12 @@ namespace Data.Repository
                 {
                     parameters.MaxResults = 50;
                 }
+
+                var queryMaxPage = _table
+                    .Where(x => x.UserId == userId).ToArray();
+
+                var TotalPages = queryMaxPage.Length / parameters.MaxResults;
+
                 var query = _table
                     .Where(x => x.UserId == userId)
                     .Include(p => p.ProductOrders)
@@ -37,7 +44,8 @@ namespace Data.Repository
                     .Skip((parameters.Page - 1) * parameters.MaxResults)
                     .Take(parameters.MaxResults);
 
-                return await query.Where(o => o.UserId == userId).ToListAsync();
+                var listOrder = await query.Where(o => o.UserId == userId).ToListAsync();
+                return new PaginationOrder { Orders = listOrder , maxPages = TotalPages < 1 ? 1 : TotalPages };
             } catch (Exception ex)
             {
                 throw new Exception(ex.Message);

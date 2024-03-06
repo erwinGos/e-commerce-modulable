@@ -53,7 +53,7 @@ namespace appleEarStore.WebApi.Controllers
                     MaxResults = maxResult
                 };
 
-                List<Order> orders = await _OrderService.GetUserOrderList(userId, parameters);
+                PaginationOrder orders = await _OrderService.GetUserOrderList(userId, parameters);
                 return Ok(orders);
             }
             catch (Exception ex)

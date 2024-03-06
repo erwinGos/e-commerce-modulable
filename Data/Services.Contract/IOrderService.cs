@@ -8,7 +8,7 @@ namespace Data.Services.Contract
     {
         public Task<Order> GetSingleOrder(int orderId, int userId, PaginationParameters parameters);
 
-        public Task<List<Order>> GetUserOrderList(int userId, PaginationParameters parameters);
+        public Task<PaginationOrder> GetUserOrderList(int userId, PaginationParameters parameters);
 
         public Task<List<Order>> GetAllUsersOrders(PaginationParameters parameters);
 
