@@ -87,12 +87,14 @@ namespace Database
                 {
                     if (property.ClrType == typeof(decimal) || property.ClrType == typeof(decimal?))
                     {
-                        property.SetColumnType("decimal(8, 5)");
+                        property.SetColumnType("decimal(14, 3)");
                     }
                 }
             }
         }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
-        => optionsBuilder.UseMySql("server=129.151.247.29;database=appleearstore;port=3306;User=root;Password=simplonco", new MySqlServerVersion(new Version(8, 0, 21)));
+        {
+            base.OnConfiguring(optionsBuilder);
+        }
     }
 }
