@@ -13,11 +13,6 @@ jobs:
       with:
         fetch-depth: 0
 
-    - name: Set up Git
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-
     - name: Increment minor version
       run: |
         TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
