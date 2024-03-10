@@ -3,7 +3,7 @@ name: Increment Major Version on Main
 on:
   push:
     branches:
-      - main
+      - develop
 
 jobs:
   versioning:
