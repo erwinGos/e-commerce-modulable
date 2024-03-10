@@ -46,11 +46,11 @@ namespace Data.Services
             }
         }
 
-        public async Task<List<Order>> GetUserOrderList(int UserId, PaginationParameters parameters)
+        public async Task<PaginationOrder> GetUserOrderList(int UserId, PaginationParameters parameters)
         {
             try
             {
-                List<Order> orders = await _orderRepository.GetOrderListAsync(UserId, parameters);
+                PaginationOrder orders = await _orderRepository.GetOrderListAsync(UserId, parameters);
                 return orders;
             } catch(Exception ex)
             {

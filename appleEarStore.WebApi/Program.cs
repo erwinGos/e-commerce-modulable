@@ -60,9 +60,9 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
-builder.Services.ConfigureDBContext(configuration);
 builder.Services.ConfigureInjectionDependencyRepository();
-builder.Services.ConfigureInjectionDependencyService();
+builder.Services.ConfigureInjectionDependencyService(configuration);
+builder.Services.ConfigureDBContext(configuration);
 builder.Services.AddAutoMapper(typeof(MapperConfiguration));
 
 builder.Services.AddAuthentication(options =>

@@ -67,12 +67,12 @@ namespace appleEarStore.WebApi.Controllers
 
         [HttpPost("usevoucher")]
         [Authorize]
-        public async Task<IActionResult> UseVoucher(string code)
+        public async Task<IActionResult> UseVoucher(VoucherUse voucherUse)
         {
             try
             {
                 int userId = Int32.Parse(User.FindFirst("UserId").Value);
-                return Ok(await _voucherService.UseVoucher(code, userId));
+                return Ok(await _voucherService.UseVoucher(voucherUse.Code, userId));
             }
             catch (Exception ex)
             {

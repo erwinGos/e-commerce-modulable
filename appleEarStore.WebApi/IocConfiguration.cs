@@ -5,6 +5,7 @@ using Data.Services;
 using Data.Services.Contract;
 using Microsoft.EntityFrameworkCore;
 using Data.Managers;
+using AutoMapper;
 
 namespace appleEarStore.WebApi
 {
@@ -30,7 +31,7 @@ namespace appleEarStore.WebApi
         }
 
 
-        public static IServiceCollection ConfigureInjectionDependencyService(this IServiceCollection services)
+        public static IServiceCollection ConfigureInjectionDependencyService(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IAuthenticationService, AuthenticationService>();
@@ -55,19 +56,54 @@ namespace appleEarStore.WebApi
             services.AddScoped<Stripe.Checkout.SessionService>();
             services.AddScoped<Stripe.CustomerService>();
             services.AddScoped<IStripeService, StripeService>();
+
+
+
+            //Configuration 
+            services.AddSingleton(configuration);
+
+
+            //Mapper
+            services.AddScoped(cfg => new MapperConfiguration(cfg => cfg.AddProfile<Data.MapperConfiguration>()));
+            services.AddScoped<IMapper>(sp => new Mapper(sp.GetRequiredService<MapperConfiguration>(), sp.GetService));
             return services;
         }
 
         public static IServiceCollection ConfigureDBContext(this IServiceCollection services, IConfiguration configuration)
         {
             var connectionString = configuration.GetConnectionString("BddConnection");
-            var serverVersion = new MySqlServerVersion(new Version(8, 0, 21));
-
-            services.AddDbContext<DatabaseContext>(options => options.UseMySql(serverVersion)
+            services.AddDbContext<DatabaseContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
                 .LogTo(Console.WriteLine, LogLevel.Information)
                 .EnableSensitiveDataLogging()
                 .EnableDetailedErrors());
 
+
+
+            return services;
+        }
+
+    }
+
+    public static class IocConfigurationTest
+    {
+        public static IServiceCollection ConfigureInjectionDependencyRepositoryTest(this IServiceCollection services)
+        {
+            services.ConfigureInjectionDependencyRepository();
+
+            return services;
+
+        }
+
+        public static IServiceCollection ConfigureInjectionDependencyServiceTest(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.ConfigureInjectionDependencyService(configuration);
+
+            return services;
+        }
+
+        public static IServiceCollection ConfigureDBContextTest(this IServiceCollection services)
+        {
+            services.AddDbContext<DatabaseContext>(options => options.UseInMemoryDatabase(databaseName: Guid.NewGuid().ToString()));
             return services;
         }
 
