@@ -14,11 +14,6 @@ jobs:
         fetch-depth: 0
         token: ${{ secrets.GITHUB_TOKEN }} # Utiliser GITHUB_TOKEN pour le checkout
 
-    - name: Set up Git
-      run: |
-        git config --local user.email "action@github.com"
-        git config --local user.name "GitHub Action"
-
     - name: Increment major version and push tag
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Définir GITHUB_TOKEN comme variable d'environnement pour le step
