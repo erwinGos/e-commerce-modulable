@@ -15,7 +15,7 @@ namespace UnitTests.Scenarios
                 Email = "descry@gmail.com",
                 Password = IdentityManager.HashPassword("password"),
                 LastName = "testLastName",
-                Name = "TestName",
+                Name = "TestName"
             };
             databaseContext.User.Add(user);
             databaseContext.SaveChanges();
