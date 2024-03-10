@@ -27,4 +27,4 @@ jobs:
         NEW_TAG=$(echo $TAG | awk -F. '{OFS="."; $1+=1; $2=0; $3=0; print}')
         echo "Creating new tag $NEW_TAG"
         git tag $NEW_TAG
-        git push https://${GITHUB_TOKEN}@github.com/erwinGos/e-commerce-modulable.git $NEW_TAG
+        git push https://${secrets.GITHUB_TOKEN}@github.com/erwinGos/e-commerce-modulable.git $NEW_TAG
