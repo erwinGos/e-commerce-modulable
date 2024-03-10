@@ -12,21 +12,19 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
+        token: ${{ secrets.GITHUB_TOKEN }} # Utiliser GITHUB_TOKEN pour le checkout
 
     - name: Set up Git
       run: |
         git config --local user.email "action@github.com"
         git config --local user.name "GitHub Action"
 
-    - name: Increment major version
+    - name: Increment major version and push tag
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Définir GITHUB_TOKEN comme variable d'environnement pour le step
       run: |
-        TAG=$(git describe --tags $(git rev-list --tags --max-count=1))
+        TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
         NEW_TAG=$(echo $TAG | awk -F. '{OFS="."; $1+=1; $2=0; $3=0; print}')
         echo "Creating new tag $NEW_TAG"
         git tag $NEW_TAG
-        git push origin $NEW_TAG
-
-    - name: Push tag
-      run: git push origin ${{ NEW_TAG }}
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        git push https://${GITHUB_TOKEN}@github.com/erwinGos/e-commerce-modulable.git $NEW_TAG
