@@ -1,0 +1,26 @@
+name: Deploy Latest Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  deploy-release:
+    runs-on: self-hosted
+    steps:
+      - name: Download Latest Release Artefacts
+        run: |
+          # Utiliser l'API GitHub pour récupérer l'URL de téléchargement du code source de la dernière release
+          curl -sL --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
+          "https://api.github.com/repos/${{ github.repository }}/releases/latest" > latest_release.json
+          # Récupérer l'URL du zipball
+          TARBALL_URL=$(cat latest_release.json | jq -r '.tarball_url')
+          # Télécharger le code source
+          curl -L --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $TARBALL_URL -o latest_release.tar.gz
+
+
+      - name: Transfer Docker Images to Server
+        run: |
+          sshpass -p ${{ secrets.PASSWORD }} scp -o StrictHostKeyChecking=no latest_release.tar.gz ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/root/
