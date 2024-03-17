@@ -5,6 +5,9 @@ EXPOSE 5112
 FROM mcr.microsoft.com/dotnet/sdk:8.0-alpine AS build
 WORKDIR /src
 COPY ["appleEarStore.WebApi.csproj", "."]
+COPY ../Data ./Data
+COPY ../Database ./Database
+
 RUN dotnet restore "./appleEarStore.WebApi.csproj"
 COPY . .
 WORKDIR "/src/."
