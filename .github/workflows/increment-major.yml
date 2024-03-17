@@ -48,6 +48,7 @@ jobs:
         TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
         NEW_TAG=$(echo $TAG | awk -F. '{OFS="."; $1+=1; $2=0; $3=0; print}')
         echo "Creating new tag $NEW_TAG"
+        echo "NEW_TAG=$NEW_TAG" >> $GITHUB_ENV
         git tag $NEW_TAG
         git push https://${GITHUB_TOKEN}@github.com/${{ github.repository }} $NEW_TAG 
     - name: Create Release
