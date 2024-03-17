@@ -12,7 +12,7 @@ jobs:
     steps:
       - name: Download Latest Release Artefacts
         run: |
-          sudo apt-get install jq
+          sudo apt-get install -y jq
           # Utiliser l'API GitHub pour récupérer l'URL de téléchargement du code source de la dernière release
           curl -sL --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
           "https://api.github.com/repos/${{ github.repository }}/releases/latest" > latest_release.json
