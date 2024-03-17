@@ -1,4 +1,4 @@
-name: Increment Major Version on Main
+name: Increment Major Version
 
 on:
   pull_request:
