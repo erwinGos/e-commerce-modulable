@@ -7,21 +7,33 @@ on:
       - main
 
 jobs:
-  deploy-release:
+  save-build-to-images:
     runs-on: self-hosted
     steps:
-      - name: Download Latest Release Artefacts
-        run: |
-          sudo apt-get install -y jq
-          # Utiliser l'API GitHub pour récupérer l'URL de téléchargement du code source de la dernière release
-          curl -sL --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          "https://api.github.com/repos/${{ github.repository }}/releases/latest" > latest_release.json
-          # Récupérer l'URL du zipball
-          TARBALL_URL=$(cat latest_release.json | jq -r '.tarball_url')
-          # Télécharger le code source
-          curl -L --header "Authorization: token ${{ secrets.GITHUB_TOKEN }}" $TARBALL_URL -o latest_release.tar.gz
+      - name: Pull Data from main branch
+        uses: actions/checkout@v2
 
-
-      - name: Transfer Docker Images to Server
+      - name: Build Docker images
         run: |
-          sshpass -p ${{ secrets.PASSWORD }} scp -o StrictHostKeyChecking=no latest_release.tar.gz ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/root/
+          export JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+          export BDD_CONNECTION=${{ secrets.BDD_CONNECTION }}
+          export STRIPE_API_KEY=${{ secrets.STRIPE_API_KEY }}
+          sudo docker-compose -f docker-compose.yml build
+          sudo docker save backend > backend.tar 
+      - name: Transfer Docker Image to Server
+        run: |
+          sshpass -p ${{ secrets.PASSWORD }} scp -o StrictHostKeyChecking=no backend.tar ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/root/
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      - name: Load Docker Image on Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: 22
+          script: |
+            ./resetimages.sh
+            
+      - name: Remove Docker Images
+        run: sudo docker image prune -a -f
