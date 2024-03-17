@@ -3,7 +3,7 @@ version: '3.4'
 services:
   backend:
     build:
-      context: ./
+      context: ./appleEarStore.WebApi
     ports:
       - "5112:80"
       - "43321:43321"
