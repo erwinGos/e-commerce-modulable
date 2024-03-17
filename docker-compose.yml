@@ -2,7 +2,8 @@ version: '3.4'
 
 services:
   backend:
-    image: backend
+    build:
+      context: ./
     ports:
       - "5112:80"
       - "43321:43321"
