@@ -39,11 +39,11 @@ jobs:
     - uses: actions/checkout@v2
       with:
         fetch-depth: 0
-        token: ${{ secrets.GITHUB_TOKEN }} # Utiliser GITHUB_TOKEN pour le checkout
+        token: ${{ secrets.GITHUB_TOKEN }}
 
     - name: Increment major version and push tag
       env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Définir GITHUB_TOKEN comme variable d'environnement pour le step
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         TAG=$(git describe --tags `git rev-list --tags --max-count=1`)
         NEW_TAG=$(echo $TAG | awk -F. '{OFS="."; $1+=1; $2=0; $3=0; print}')
