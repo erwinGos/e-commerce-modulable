@@ -19,10 +19,10 @@ jobs:
           export BDD_CONNECTION=${{ secrets.BDD_CONNECTION }}
           export STRIPE_API_KEY=${{ secrets.STRIPE_API_KEY }}
           sudo docker-compose -f docker-compose.yml build
-          sudo docker save backend > backend.tar 
+          sudo docker save e-commerce-modulable_backend > e-commerce-modulable_backend.tar 
       - name: Transfer Docker Image to Server
         run: |
-          sshpass -p ${{ secrets.PASSWORD }} scp -o StrictHostKeyChecking=no backend.tar ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/root/
+          sshpass -p ${{ secrets.PASSWORD }} scp -o StrictHostKeyChecking=no e-commerce-modulable_backend.tar ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/root/
         env:
           SSH_AUTH_SOCK: /tmp/ssh_agent.sock
       - name: Load Docker Image on Server
