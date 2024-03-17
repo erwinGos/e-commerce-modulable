@@ -50,3 +50,14 @@ jobs:
         echo "Creating new tag $NEW_TAG"
         git tag $NEW_TAG
         git push https://${GITHUB_TOKEN}@github.com/${{ github.repository }} $NEW_TAG 
+    - name: Create Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ env.NEW_TAG }}
+        release_name: V${{ env.NEW_TAG }}
+        draft: false
+        prerelease: false
+        body: "..."
