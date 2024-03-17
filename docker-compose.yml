@@ -4,7 +4,6 @@ services:
   backend:
     build:
       context: ./
-      dockerfile: appleEarStore.WebApi/Dockerfile
     ports:
       - "5112:80"
       - "43321:43321"
