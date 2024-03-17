@@ -2,7 +2,7 @@
 using AutoMapper;
 using Data.Services.Contract;
 using Database.Entities;
-using UnitTests.Scenarios;
+using UnitTest.Scenarios;
 using userMicroService.Tests.Common;
 using Data.DTO.User;
 using Data.Services;

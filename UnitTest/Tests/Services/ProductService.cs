@@ -1,6 +1,6 @@
 ﻿using Data.Services.Contract;
 using Microsoft.Extensions.DependencyInjection;
-using UnitTests.Scenarios;
+using UnitTest.Scenarios;
 using userMicroService.Tests.Common;
 
 namespace UnitTest.Tests.Services
@@ -14,8 +14,8 @@ namespace UnitTest.Tests.Services
         {
             SetUpTest();
             _productService = _serviceProvider?.GetService<IProductService>();
-            _context.CreateUser();
-            _context.CreateUsers();
+            _context.CreateProduct();
+            _context.CreateProducts();
         }
 
         [TearDown]

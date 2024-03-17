@@ -2,7 +2,7 @@
 using Data.Services.Contract;
 using Database.Entities;
 using Microsoft.Extensions.DependencyInjection;
-using UnitTests.Scenarios;
+using UnitTest.Scenarios;
 using userMicroService.Tests.Common;
 
 namespace UnitTest.Tests.Services

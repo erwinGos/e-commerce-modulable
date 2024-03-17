@@ -3,7 +3,7 @@ using Database;
 using Data.Managers;
 using Microsoft.EntityFrameworkCore;
 
-namespace UnitTests.Scenarios
+namespace UnitTest.Scenarios
 {
     public static class UserScenario
     {
