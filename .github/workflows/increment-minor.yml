@@ -1,9 +1,10 @@
 name: Increment Major Version on Main
 
 on:
-  push:
+  pull_request:
     branches:
       - develop
+    types: [opened, reopened, synchronize]
 
 jobs:
   versioning:
