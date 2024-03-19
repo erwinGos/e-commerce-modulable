@@ -1,0 +1,39 @@
+name: Deploy Latest Release
+
+on:
+  pull_request:
+    types: [closed]
+    branches:
+      - main
+
+jobs:
+  save-build-to-images:
+    runs-on: self-hosted
+    steps:
+      - name: Pull Data from main branch
+        uses: actions/checkout@v2
+
+      - name: Build Docker images
+        run: |
+          export JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
+          export BDD_CONNECTION=${{ secrets.BDD_CONNECTION }}
+          export STRIPE_API_KEY=${{ secrets.STRIPE_API_KEY }}
+          sudo docker-compose -f docker-compose.yml build
+          sudo docker save e-commerce-modulable_backend > e-commerce-modulable_backend.tar 
+      - name: Transfer Docker Image to Server
+        run: |
+          sshpass -p ${{ secrets.PASSWORD }} scp -o StrictHostKeyChecking=no e-commerce-modulable_backend.tar ${{ secrets.USERNAME }}@${{ secrets.HOST }}:/root/
+        env:
+          SSH_AUTH_SOCK: /tmp/ssh_agent.sock
+      - name: Load Docker Image on Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.HOST }}
+          username: ${{ secrets.USERNAME }}
+          password: ${{ secrets.PASSWORD }}
+          port: 22
+          script: |
+            ./resetimages.sh
+            
+      - name: Remove Docker Images
+        run: sudo docker image prune -a -f
