@@ -1,5 +1,6 @@
 using appleEarStore.WebApi;
 using Data;
+using Data.DTO;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
@@ -7,9 +8,11 @@ using Stripe;
 using System.Text;
 using System.Text.Json.Serialization;
 
+
 var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
 // Add services to the container.
+
 
 builder.Services.AddControllers().AddJsonOptions(options =>
 {
@@ -22,13 +25,14 @@ StripeConfiguration.ApiKey = stripeSettings.ApiKey;
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddCors(options =>
 {
-options.AddPolicy("AllowAll", 
-    builder =>
+options.AddPolicy("AllowAll",
+    builderOption =>
     {
-        builder.WithOrigins("http://localhost:3000")
-                       .AllowCredentials()
-                       .AllowAnyHeader()
-                       .AllowAnyMethod();
+        string Url = builder.Configuration.GetSection("Urls").Get<UrlsConfig>().FrontEndUrl;
+        builderOption.WithOrigins(Url)
+                        .AllowCredentials()
+                        .AllowAnyHeader()
+                        .AllowAnyMethod();
     });
 });
 builder.Services.AddSwaggerGen(c =>

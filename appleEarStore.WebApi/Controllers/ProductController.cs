@@ -7,7 +7,6 @@ using Microsoft.AspNetCore.Authorization;
 using Stripe;
 using Stripe.Climate;
 using AutoMapper;
-using System.Drawing.Drawing2D;
 using Data.Services;
 using Data;
 
