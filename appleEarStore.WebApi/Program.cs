@@ -103,7 +103,9 @@ app.UseHttpsRedirection();
 
 app.UseCors("AllowAll");
 
+app.UseAuthentication();
 app.UseAuthorization();
+app.UseMiddleware<UserMiddleWare>();
 
 app.MapControllers();
 
