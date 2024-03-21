@@ -1,14 +1,40 @@
 name: Deploy Latest Release
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
-      - main
+      - minor-deploy
+      - major-deploy
 
 jobs:
+  run-tests:
+    runs-on: self-hosted
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 8.x
+
+      - name: Restore dependencies
+        run: dotnet restore "./UnitTest/UnitTest.csproj"
+
+      - name: Test
+        run: dotnet test UnitTest/UnitTest.csproj --configuration "$BUILD_CONFIG" --logger "trx;LogFileName=test-results.trx" || true
+
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: always()
+        with:
+          name: DotNET Tests
+          path: "**/test-results.trx"                            
+          reporter: dotnet-trx
+          fail-on-error: true
   save-build-to-images:
     runs-on: self-hosted
+    needs: run-tests
     steps:
       - name: Pull Data from main branch
         uses: actions/checkout@v2
