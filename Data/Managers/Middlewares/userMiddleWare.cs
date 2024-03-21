@@ -25,11 +25,12 @@ public class UserMiddleWare
                 
                 DateTime time = DateTime.UtcNow.AddMicroseconds(1000);
                 string timeToString = time.ToString("R", CultureInfo.InvariantCulture);
-                
-                context.Response.Headers.Add("Set-Cookie", "auth_token=Bearer ; Path=/; Secure;Expires=" + timeToString);
+
+                context.Response.Headers.Add("Set-Cookie", "auth_token= ; Path=/; Secure;Expires=" + timeToString);
                 await context.Response.WriteAsync("Votre compte est " + (checkUser.IsBanned ? "banni" : "désactivé"));
+                return;
             }
-            await _next(context);
         }
+        await _next(context);
     }
 }
