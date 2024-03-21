@@ -3,7 +3,7 @@ name: Increment Major Version
 on:
   pull_request:
     branches:
-      - main
+      - major-deploy
     types: [opened, reopened, synchronize]
 
 jobs:
