@@ -3,7 +3,7 @@ name: Increment Major Version
 on:
   pull_request:
     branches:
-      - 'features-*'
+      - develop
     types: [opened, reopened, synchronize]
     
 jobs:
