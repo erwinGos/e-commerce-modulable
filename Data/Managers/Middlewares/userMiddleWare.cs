@@ -23,13 +23,13 @@ public class UserMiddleWare
             if(checkUser.IsBanned || checkUser.IsDeactivated) {
                 context.Response.StatusCode = StatusCodes.Status401Unauthorized;
                 
-                DateTime time = DateTime.UtcNow.AddMicroseconds(1000);
+                DateTime time = DateTime.UtcNow.AddMicroseconds(500);
                 string timeToString = time.ToString("R", CultureInfo.InvariantCulture);
-                
-                context.Response.Headers.Add("Set-Cookie", "auth_token=Bearer ; Path=/; Secure;Expires=" + timeToString);
+
+                context.Response.Headers.Add("Set-Cookie", "auth_token= ; Path=/; Secure;Expires=" + timeToString);
                 await context.Response.WriteAsync("Votre compte est " + (checkUser.IsBanned ? "banni" : "désactivé"));
             }
-            await _next(context);
         }
+        await _next(context);
     }
 }
