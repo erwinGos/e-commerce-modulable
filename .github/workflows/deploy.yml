@@ -1,10 +1,10 @@
 name: Deploy Latest Release
 
 on:
-  pull_request:
-    types: [closed]
+  push:
     branches:
-      - main
+      - minor-deploy
+      - major-deploy
 
 jobs:
   save-build-to-images:
