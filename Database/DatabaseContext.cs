@@ -38,6 +38,8 @@ namespace Database
 
         public virtual DbSet<Order> WebsiteSettings { get; set; }
 
+        public virtual DbSet<Notifications> Notifications { get; set; }
+
         protected override void OnModelCreating(ModelBuilder builder)
         {
             builder.Entity<User>(entity => {
