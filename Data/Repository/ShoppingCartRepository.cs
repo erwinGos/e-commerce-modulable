@@ -42,5 +42,28 @@ namespace Data.Repository
                 throw new Exception($"Une erreur est survenue lors de la mise à jour: {ex.Message}", ex);
             }
         }
+
+        public async Task<string> ClearShoppingCart(int UserId) {
+            try
+            {
+                var carts = await _table.Where(c => c.UserId == UserId).ToListAsync();
+
+                if (carts != null && carts.Count > 0)
+                {
+                    _db.RemoveRange(carts);
+                    await _db.SaveChangesAsync();
+                    
+                    return "Le panier a été vidé avec succès.";
+                }
+                else
+                {
+                    return "Aucun panier trouvé pour cet utilisateur.";
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }
