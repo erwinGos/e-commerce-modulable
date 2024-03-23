@@ -20,7 +20,7 @@ namespace appleEarStore.WebApi.Controllers
             _OrderService = orderService;
         }
 
-        [HttpGet("/getsingle/{Id}")]
+        [HttpGet("getsinglebyid/{Id}")]
         [Authorize]
         public async Task<IActionResult> GetOrderById(int Id)
         {
@@ -31,7 +31,26 @@ namespace appleEarStore.WebApi.Controllers
                 {
                     isAdmin = User.FindFirst(ClaimTypes.Role).Value == "Admin"
                 };
-                Order order = await _OrderService.GetSingleOrder(Id, userId, parameters);
+                Order order = await _OrderService.GetSingleOrderById(Id, userId, parameters);
+                return Ok(order);
+            } catch(Exception ex)
+            {
+                return BadRequest(new { message = ex.Message });
+            }
+        }
+
+        [HttpGet("getsinglebynumber/{orderNumber}")]
+        [Authorize]
+        public async Task<IActionResult> GetOrderByNumber(string orderNumber)
+        {
+            try
+            {
+                int userId = Int32.Parse(User.FindFirst("UserId").Value);
+                PaginationParameters parameters = new PaginationParameters()
+                {
+                    isAdmin = User.FindFirst(ClaimTypes.Role).Value == "Admin"
+                };
+                Order order = await _OrderService.GetSingleOrderByNumber(orderNumber, userId, parameters);
                 return Ok(order);
             } catch(Exception ex)
             {

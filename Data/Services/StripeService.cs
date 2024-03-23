@@ -42,7 +42,7 @@ namespace Data.Services
 
                 var options = new Stripe.Checkout.SessionCreateOptions
                 {
-                    SuccessUrl = _configuration["Urls:frontEndUrl"],
+                    SuccessUrl = _configuration["Urls:frontEndUrl"] + "/ordersuccesspayment/" + order.OrderNumber,
                     LineItems = new List<Stripe.Checkout.SessionLineItemOptions>
                 {
                     new Stripe.Checkout.SessionLineItemOptions
