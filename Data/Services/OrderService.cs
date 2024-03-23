@@ -20,8 +20,9 @@ namespace Data.Services
         private readonly IMapper _mapper;
         private readonly OrderManager _orderManager;
         private readonly IStripeService _stripeService;
+        private readonly IShoppingCartService _shoppingCartService;
 
-        public OrderService(IStripeService stripeService, OrderManager orderManager, IMapper mapper, IOrderRepository orderRepository, IUserRepository userRepository, IProductRepository productRepository, IPromoRepository promoRepository, IProductOrderRepository productOrderRepository, IAddressRepository addressRepository)
+        public OrderService(IShoppingCartService shoppingCartService, IStripeService stripeService, OrderManager orderManager, IMapper mapper, IOrderRepository orderRepository, IUserRepository userRepository, IProductRepository productRepository, IPromoRepository promoRepository, IProductOrderRepository productOrderRepository, IAddressRepository addressRepository)
         {
             _orderRepository = orderRepository;
             _userRepository = userRepository;
@@ -29,16 +30,29 @@ namespace Data.Services
             _productRepository = productRepository;
             _productOrderRepository = productOrderRepository;
             _addressRepository = addressRepository;
+            _shoppingCartService = shoppingCartService;
             _mapper = mapper;
             _orderManager = orderManager;
             _stripeService = stripeService;
         }
 
-        public async Task<Order> GetSingleOrder(int orderId, int userId, PaginationParameters parameters)
+        public async Task<Order> GetSingleOrderById(int orderId, int userId, PaginationParameters parameters)
         {
             try
             {
                 Order order = await _orderRepository.FindSingleBy(o => o.Id == orderId && (o.UserId == userId || parameters.isAdmin)) ?? throw new Exception("Cette commande n'existe pas ou ne vous appartient pas.");
+                return order;
+            } catch(Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<Order> GetSingleOrderByNumber(string orderNumber, int userId, PaginationParameters parameters)
+        {
+            try
+            {
+                Order order = await _orderRepository.FindSingleBy(o => o.OrderNumber == orderNumber && (o.UserId == userId || parameters.isAdmin)) ?? throw new Exception("Cette commande n'existe pas ou ne vous appartient pas.");
                 return order;
             } catch(Exception ex)
             {
@@ -192,6 +206,7 @@ namespace Data.Services
                 string StripePaymentUrl = await _stripeService.CreatePaymentLink(orderToCreate, user);
                 orderToCreate.StripePaymentUrl = StripePaymentUrl;
                 Order createdOrder = await _orderRepository.Insert(orderToCreate);
+                await _shoppingCartService.ClearShoppingCartAfterOrder(userId);
                 foreach(ProductOrder productOrder in productOrderList)
                 {
                     productOrder.OrderId = createdOrder.Id;
