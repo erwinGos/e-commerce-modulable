@@ -6,7 +6,8 @@ namespace Data.Services.Contract
 {
     public interface IOrderService
     {
-        public Task<Order> GetSingleOrder(int orderId, int userId, PaginationParameters parameters);
+        public Task<Order> GetSingleOrderById(int orderId, int userId, PaginationParameters parameters);
+        public Task<Order> GetSingleOrderByNumber(string orderNumber, int userId, PaginationParameters parameters);
 
         public Task<PaginationOrder> GetUserOrderList(int userId, PaginationParameters parameters);
 

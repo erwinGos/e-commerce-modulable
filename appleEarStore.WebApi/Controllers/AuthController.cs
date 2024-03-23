@@ -51,6 +51,14 @@ namespace appleEarStore.WebApi.Controllers
             try
             {
                 User user = await _AuthenticationService.SignIn(signInUser);
+                if(user.IsDeactivated) {
+                    return BadRequest(new { message = "Votre compte est actuellement désactivé." });
+                }
+
+                if(user.IsBanned) {
+                    return BadRequest(new { message = "Votre compte est actuellement banni." });
+                }
+                
                 string BearerToken = _AuthenticationService.GenerateToken(user);
 
                 DateTime time = DateTime.UtcNow.AddHours(Convert.ToDouble(_configuration["Jwt:ExpiresInHours"]));

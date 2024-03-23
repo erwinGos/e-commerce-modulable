@@ -29,7 +29,7 @@ namespace Data.Repository
                 var queryMaxPage = _table
                     .Where(x => x.UserId == userId).ToArray();
 
-                var TotalPages = queryMaxPage.Length / parameters.MaxResults;
+                var TotalPages = Math.Ceiling((double)queryMaxPage.Length / parameters.MaxResults);
 
                 var query = _table
                     .Where(x => x.UserId == userId)
@@ -45,7 +45,7 @@ namespace Data.Repository
                     .Take(parameters.MaxResults);
 
                 var listOrder = await query.Where(o => o.UserId == userId).ToListAsync();
-                return new PaginationOrder { Orders = listOrder , maxPages = TotalPages < 1 ? 1 : TotalPages };
+                return new PaginationOrder { Orders = listOrder , maxPages = (int)(TotalPages < 1 ? 1 : TotalPages) };
             } catch (Exception ex)
             {
                 throw new Exception(ex.Message);

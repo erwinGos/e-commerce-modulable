@@ -84,5 +84,14 @@ namespace Data.Services
                 throw new Exception(ex.Message);
             }
         }
+    
+        public async Task<string> ClearShoppingCartAfterOrder(int userId) 
+        {
+            try {
+                return await _shoppingCartRepository.ClearShoppingCart(userId);
+            } catch(Exception ex) {
+                throw new Exception(ex.Message);
+            }
+        }
     }
 }

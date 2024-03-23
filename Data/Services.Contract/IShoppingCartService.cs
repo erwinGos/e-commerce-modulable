@@ -9,5 +9,7 @@ namespace Data.Services.Contract
         public Task<CartRead> AddProductToShoppingCart(AddToCart addToCart, int UserId);
 
         public Task<CartRead> RemoveProductFromShoppingCart(int userCartId, int userId);
+
+        public Task<string> ClearShoppingCartAfterOrder(int userId);
     }
 }
