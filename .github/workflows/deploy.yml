@@ -44,6 +44,7 @@ jobs:
           export JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}
           export BDD_CONNECTION=${{ secrets.BDD_CONNECTION }}
           export STRIPE_API_KEY=${{ secrets.STRIPE_API_KEY }}
+          export FRONT_END_URL=${{ secrets.FRONT_END_URL }}
           sudo docker-compose -f docker-compose.yml build
           sudo docker save e-commerce-modulable_backend > e-commerce-modulable_backend.tar 
       - name: Transfer Docker Image to Server
