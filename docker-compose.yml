@@ -8,13 +8,13 @@ services:
       - "5112:80"
       - "43321:43321"
     environment:
-      - "Logging__LogLevel__Default=Information"
-      - "Logging__LogLevel__Microsoft.AspNetCore=Warning"
-      - "AllowedHosts=*"
-      - "ConnectionStrings__BddConnection=$BDD_CONNECTION"
-      - "Jwt__SecretKey=$JWT_SECRET_KEY"
-      - "Jwt__Issuer=backend"
-      - "Jwt__Audience=ecommercefrontend"
-      - "Jwt__ExpiresInHours=3"
-      - "Urls__frontEndUrl=$FRONT_END_URL"
-      - "StripeSettings__ApiKey=$STRIPE_API_KEY"
+      - Logging__LogLevel__Default="Information"
+      - Logging__LogLevel__Microsoft.AspNetCore="Warning"
+      - AllowedHosts="*"
+      - ConnectionStrings__BddConnection=${BDD_CONNECTION}
+      - Jwt__SecretKey=${JWT_SECRET_KEY}
+      - Jwt__Issuer="backend"
+      - Jwt__Audience="ecommercefrontend"
+      - Jwt__ExpiresInHours="3"
+      - Urls__frontEndUrl=${FRONT_END_URL}
+      - StripeSettings__ApiKey=${STRIPE_API_KEY} 
