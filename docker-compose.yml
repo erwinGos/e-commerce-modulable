@@ -16,4 +16,5 @@ services:
       - "Jwt__Issuer=backend"
       - "Jwt__Audience=ecommercefrontend"
       - "Jwt__ExpiresInHours=3"
+      - "Urls__frontEndUrl=http://144.24.204.1:3000"
       - "StripeSettings__ApiKey=$STRIPE_API_KEY"
