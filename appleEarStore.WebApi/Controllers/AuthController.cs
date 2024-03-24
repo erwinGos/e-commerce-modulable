@@ -64,7 +64,7 @@ namespace appleEarStore.WebApi.Controllers
                 DateTime time = DateTime.UtcNow.AddHours(Convert.ToDouble(_configuration["Jwt:ExpiresInHours"]));
                 string timeToString = time.ToString("R", CultureInfo.InvariantCulture);
 
-                Response.Headers.Add("Set-Cookie", "auth_token=Bearer " + BearerToken + "; Path=/; Secure; Expires=" + timeToString);
+                Response.Headers.Add("Set-Cookie", "auth_token=Bearer " + BearerToken + "; Path=/; Expires=" + timeToString);
                 return Ok(user);
             } catch (Exception ex)
             {
@@ -78,7 +78,7 @@ namespace appleEarStore.WebApi.Controllers
         {
             DateTime time = DateTime.UtcNow.AddMicroseconds(1000);
             string timeToString = time.ToString("R", CultureInfo.InvariantCulture);
-            Response.Headers.Add("Set-Cookie", "auth_token=Bearer ; Path=/; Secure;Expires=" + timeToString);
+            Response.Headers.Add("Set-Cookie", "auth_token=Bearer ; Path=/;Expires=" + timeToString);
             return Ok();
         }
     }
